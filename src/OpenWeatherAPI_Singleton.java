@@ -1,4 +1,5 @@
 import com.github.prominence.openweathermap.api.OpenWeatherMapClient;
+import junit.framework.Test;
 
 public class OpenWeatherAPI_Singleton {
     private static OpenWeatherMapClient single_instance = null;
