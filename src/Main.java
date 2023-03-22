@@ -7,16 +7,17 @@ public class Main {
 
     public static void main(String[] args) {
 
-        try {
-            File API_TOKEN_FILE = new File("resources/API_KEY.txt");
-            API_TOKEN = new java.util.Scanner(API_TOKEN_FILE).useDelimiter("\\Z").next();
-        } catch (Exception e) {
-            System.out.println("API_KEY.txt not found");
+        OpenWeatherAPI_Singleton openWeatherAPI_singleton = new OpenWeatherAPI_Singleton();
+        OpenWeatherMapClient openWeatherClient = OpenWeatherAPI_Singleton.getInstance();
+
+        if(openWeatherClient == null) {
+            System.out.println("OpenWeatherClient is null");
+        }
+        else {
+            System.out.println("Connected to OpenWeatherClient");
         }
 
-        System.out.println("Hello, World!");
 
-        OpenWeatherMapClient openWeatherClient = new OpenWeatherMapClient(API_TOKEN);
 
         /*
         final Weather weather = openWeatherClient.currentWeather()
