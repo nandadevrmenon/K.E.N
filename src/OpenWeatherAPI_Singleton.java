@@ -12,6 +12,8 @@ public class OpenWeatherAPI_Singleton {
     {
         if (single_instance == null)
             single_instance = new OpenWeatherMapClient(API_TOKEN);
+            single_instance.setConnectionTimeout(1000);
+            single_instance.setReadTimeout(1000);
 
         return single_instance;
     }
