@@ -15,16 +15,22 @@ public class Main {
     public static void main(String[] args) throws IOException, ParseException {
 
         CloseableHttpClient httpClient = HttpClients.createDefault();
-        HttpPost httpPost = new HttpPost("https://api.openai.com/v1/completions");
+        HttpPost httpPost = new HttpPost("https://api.openai.com/v1/chat/completions");
         String OPENAI_API_TOKEN = "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";
 
         httpPost.setHeader("Authorization", "Bearer " + OPENAI_API_TOKEN);
         httpPost.setHeader("Content-Type", "application/json");
 
+        JSONObject[] messages = {
+                new JSONObject().put("role", "system").put("content", "You are a great weather chat bot."),
+                new JSONObject().put("role", "user").put("content", "Find me 3 destinations with good weather and tell me wich ones I have to visit first. "),
+                //new JSONObject().put("role", "user").put("content", "Where was it played?")
+        };
+
         JSONObject requestBody = new JSONObject();
-        requestBody.put("model", "text-davinci-003");
-        requestBody.put("prompt", "Speak Human you mf robot");
-        requestBody.put("max_tokens", 200);
+        requestBody.put("model", "gpt-3.5-turbo");
+        requestBody.put("max_tokens", 1000);
+        requestBody.put("messages", messages);
 
         StringEntity entity = new StringEntity(requestBody.toString());
         httpPost.setEntity(entity);
