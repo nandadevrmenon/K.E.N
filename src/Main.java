@@ -6,7 +6,8 @@ public class Main {
 
     EasyWeather weather = new EasyWeather();
         System.out.println(weather.getTemperatureByCity("bihar,india"));
-        System.out.println(weather.getWeatherByCity("bihar,india"));
+        System.out.println(weather.getWeatherByCity("dublin,ire"));
 
+        System.out.println(weather.getRainByCity("waco,usa"));
     }
 }
