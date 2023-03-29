@@ -4,6 +4,7 @@ import com.github.prominence.openweathermap.api.enums.UnitSystem;
 import com.github.prominence.openweathermap.api.exception.NoDataFoundException;
 import com.github.prominence.openweathermap.api.model.forecast.Forecast;
 import com.github.prominence.openweathermap.api.model.forecast.WeatherForecast;
+import com.github.prominence.openweathermap.api.model.weather.Rain;
 import com.github.prominence.openweathermap.api.model.weather.Weather;
 
 
@@ -100,9 +101,11 @@ public class EasyWeather {
         if(weather == null){
             return -301;            //-301 as a no data found error code
         }
-
-        double rain = weather.getRain().getThreeHourLevel();
-        return rain;
+        Rain rain = weather.getRain();
+        if(rain==null){
+            return -301;
+        }
+        return rain.getOneHourLevel();
     }
 
     public ArrayList<Double> getThreeDayTempStarting(LocalDate startDate, ArrayList<String> Locations){
