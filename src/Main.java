@@ -5,9 +5,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class Main {
-    private static String API_TOKEN;
+    public static void main(String[] args) throws IOException, ParseException {
 
-    public static void main(String[] args) {
+
+        EasyOpenAI openAI = new EasyOpenAI();
+        openAI.chat("I want to go to Dublin 12 degree, Mumbai 32 degree, and New York -2 degree.");
+
 
     EasyWeather weather = new EasyWeather();
 
