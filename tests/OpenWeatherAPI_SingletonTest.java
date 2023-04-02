@@ -1,10 +1,9 @@
 import com.github.prominence.openweathermap.api.OpenWeatherMapClient;
-import com.github.prominence.openweathermap.api.enums.Language;
-import com.github.prominence.openweathermap.api.enums.UnitSystem;
-import com.github.prominence.openweathermap.api.request.weather.CurrentWeatherRequester;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 class OpenWeatherAPI_SingletonTest {
 
@@ -17,5 +16,6 @@ class OpenWeatherAPI_SingletonTest {
             //we create a copy of the api to test if we get the same instance or not
             OpenWeatherMapClient clientCopy = OpenWeatherAPI_Singleton.getInstance();
             assertEquals(openWeatherClient,clientCopy);
+            
         }
 }
