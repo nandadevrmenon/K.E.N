@@ -1,35 +1,48 @@
-import com.github.prominence.openweathermap.api.model.forecast.WeatherForecast;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Iterator;
+import com.github.prominence.openweathermap.api.model.weather.Weather;
+import org.apache.hc.core5.http.ParseException;
+import java.io.IOException;
+import java.util.Scanner;
+
 
 public class Main {
     public static void main(String[] args) throws IOException, ParseException {
+        System.out.println("Hi, I'm WeatherBot, I can tell you the current weather of any place in the world."+
+                "\r\n"+"Which city's weather would you like to know? ");
 
+        Scanner scanner = new Scanner(System.in);
+        while(scanner.hasNext()){
+            String input = scanner.next().toLowerCase().trim();
+            if(input.equals("exit")){
+                break;
+            }
+            String weatherString = getWeather(input);
+            if(weatherString.equals("exit")) break;
+            if(!weatherString.isEmpty()){
+                System.out.println("The weather there is "+"\r\n"+ weatherString);
+                System.out.println("Would you like to know the weather at another place? If not, type 'exit'.");
+            }
+        }
+    }
 
-        EasyOpenAI openAI = new EasyOpenAI();
-        openAI.chat("I want to go to Dublin 12 degree, Mumbai 32 degree, and New York -2 degree.");
-
-
-    EasyWeather weather = new EasyWeather();
-
-
-        ArrayList<String> locations = new ArrayList<String>();
-        locations.add("cork,ireland");
-        locations.add("dublin,ireland");
-        locations.add("galway,ireland");
-        locations.add("wicklow,ireland");
-        locations.add("tallaght,ireland");
-        ArrayList<Double> temps = weather.getThreeDayTempStarting(LocalDate.now(),"helsinki");
-        ArrayList<Double> humidities = weather.getThreeDayHumidityStarting(LocalDate.now(),"helsinki");
-        ArrayList<Double> cloudcovers = weather.getThreeDayCloudStarting(LocalDate.now(),"helsinki");
-        ArrayList<Double> winds = weather.getThreeDayWindStarting(LocalDate.now(),"helsinki");
-
-        System.out.println(temps);
-        System.out.println(humidities);
-        System.out.println(cloudcovers);
-        System.out.println(winds);
+    public static String getWeather(String city){
+        EasyWeather easyWeather = new EasyWeather();
+        Weather weather=null;
+        try{
+           weather =  easyWeather.getWeatherByCity(city);
+        }
+        catch( IllegalArgumentException iae){
+            System.out.println(iae.getMessage());
+            System.out.println("Try another Location please");
+            return "";
+        }
+        if(weather == null){
+            System.out.println("A problem occured while fetching the data.Please try again later");
+            return "exit";
+        }
+        return weather.toString();
 
     }
 }
+
+

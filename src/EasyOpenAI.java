@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.Stack;
 
 public class EasyOpenAI {
-    private static final String API_TOKEN = "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";
+    private static final String API_TOKEN = "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";
     private static final String API_URL = "https://api.openai.com/v1/chat/completions";
     private final CloseableHttpClient httpClient;
     private JSONObject requestBody;
@@ -30,7 +30,7 @@ public class EasyOpenAI {
         requestBody = new JSONObject();
         messages = new Stack<>();
 
-        addMessage("system", "You are a great weather chat bot, you're goal, given cities and weather conditions is to" +
+        addMessage("system",  "You are a great weather chat bot, you're goal, given cities and weather conditions is to" +
                 " tell me what kind of clothes I need to wear and why. Keep your answer short but informative !"); // gaslight the bot into thinking it's a weather bot
 
     }
