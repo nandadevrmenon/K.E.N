@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.Stack;
 
 public class EasyOpenAI {
-    private static final String API_TOKEN = "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";
+    private static final String API_TOKEN = "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";
     private static final String API_URL = "https://api.openai.com/v1/chat/completions";
     private final CloseableHttpClient httpClient;
     private JSONObject requestBody;
@@ -75,7 +75,6 @@ public class EasyOpenAI {
 
 
         responseObject = new JSONObject(responseString);
-//        System.out.println(responseObject.getJSONArray("choices").getJSONObject(0).getJSONObject("message").getString("content"));
-        System.out.println(responseString);
+        System.out.println(responseObject.getJSONArray("choices").getJSONObject(0).getJSONObject("message").getString("content"));
     }
 }
