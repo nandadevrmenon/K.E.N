@@ -1,5 +1,7 @@
 import com.github.prominence.openweathermap.api.model.forecast.WeatherForecast;
 
+import java.io.IOException;
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -12,7 +14,7 @@ public class Main {
         openAI.chat("I want to go to Dublin 12 degree, Mumbai 32 degree, and New York -2 degree.");
 
 
-    EasyWeather weather = new EasyWeather();
+        EasyWeather weather = new EasyWeather();
 
 
         ArrayList<String> locations = new ArrayList<String>();
