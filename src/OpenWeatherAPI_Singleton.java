@@ -17,6 +17,4 @@ public class OpenWeatherAPI_Singleton {
 
         return single_instance;
     }
-
-
 }

@@ -1,32 +1,28 @@
-import com.github.prominence.openweathermap.api.model.forecast.WeatherForecast;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Iterator;
+import org.apache.hc.core5.http.ParseException;
+import java.io.IOException;
+import java.util.Scanner;
+
 
 public class Main {
-    private static String API_TOKEN;
+    public static void main(String[] args) throws IOException, ParseException {
+        System.out.println("Hi, I'm WeatherBot, I can tell you the current weather of any place in the world."+
+                "\r\n"+"Which city's weather would you like to know? ");
 
-    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
 
-    EasyWeather weather = new EasyWeather();
+        while(scanner.hasNext()){
+            if(scanner.next().toLowerCase().trim().equals("exit")){
+                break;
+            }
+            askCity(scanner);
+        }
+    }
 
-
-        ArrayList<String> locations = new ArrayList<String>();
-        locations.add("cork,ireland");
-        locations.add("dublin,ireland");
-        locations.add("galway,ireland");
-        locations.add("wicklow,ireland");
-        locations.add("tallaght,ireland");
-        ArrayList<Double> temps = weather.getThreeDayTempStarting(LocalDate.now(),"helsinki");
-        ArrayList<Double> humidities = weather.getThreeDayHumidityStarting(LocalDate.now(),"helsinki");
-        ArrayList<Double> cloudcovers = weather.getThreeDayCloudStarting(LocalDate.now(),"helsinki");
-        ArrayList<Double> winds = weather.getThreeDayWindStarting(LocalDate.now(),"helsinki");
-
-        System.out.println(temps);
-        System.out.println(humidities);
-        System.out.println(cloudcovers);
-        System.out.println(winds);
+    public static void askCity(Scanner scanner){
+        String city = scanner.next().toLowerCase().trim();
 
     }
 }
+
+
