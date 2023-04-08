@@ -30,8 +30,7 @@ public class EasyOpenAI {
         requestBody = new JSONObject();
         messages = new Stack<>();
 
-        addMessage("system",  "You are a great weather chat bot, you're goal, given cities and weather conditions is to" +
-                " tell me what kind of clothes I need to wear and why. Keep your answer short but informative !"); // gaslight the bot into thinking it's a weather bot
+        addMessage("system","You are an NLP that returns required tokens in the format token,token,token,... You will only return what it required and are not supposed to give any context or explanation as to why you returned that. Also do not use any periods in the output."); // gaslight the bot into thinking it's a weather bot
 
     }
 
@@ -39,12 +38,15 @@ public class EasyOpenAI {
         messages.add(new JSONObject().put("role", role).put("content", content));
     }
 
-    public void chat(String message) {
-        addMessage("user", message);
+    public String getSingleLocationToken(String message) {
+        addMessage("user",  "Give me only city tokens in the string '"+message+"'. If there are no locations return a token null'");
         Send();
-        Receive();
-
-
+        String output = Receive();
+        if(output.equals("null")) {
+            System.out.println("Sorry I didn't catch a location in your input.Please try again.");
+            return null;
+        }
+        return output;
     }
 
 
@@ -58,7 +60,7 @@ public class EasyOpenAI {
         httpPost.setEntity(entity);
     }
 
-    private void Receive() {
+    private String Receive() {
         CloseableHttpResponse response = null;
         try {
             response = httpClient.execute(httpPost);
@@ -75,6 +77,8 @@ public class EasyOpenAI {
 
 
         responseObject = new JSONObject(responseString);
-        System.out.println(responseObject.getJSONArray("choices").getJSONObject(0).getJSONObject("message").getString("content"));
+        String content = responseObject.getJSONArray("choices").getJSONObject(0).getJSONObject("message").getString("content");
+        System.out.println(content);
+        return content;
     }
 }

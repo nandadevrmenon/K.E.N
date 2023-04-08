@@ -7,15 +7,17 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws IOException, ParseException {
-        System.out.println("Hi, I'm WeatherBot, I can tell you the current weather of any place in the world."+
-                "\r\n"+"Which city's weather would you like to know? ");
+        System.out.println("Hi, I'm WeatherBot. I can help you with all your weather needs.");
+//        String mode = askUserAboutMode();
 
         Scanner scanner = new Scanner(System.in);
         while(scanner.hasNext()){
-            String input = scanner.next().toLowerCase().trim();
+            String input = scanner.nextLine().toLowerCase().trim();
             if(input.equals("exit")){
                 break;
             }
+            EasyOpenAI openAI = new EasyOpenAI();
+            input = openAI.getSingleLocationToken(input);
             String weatherString = getWeather(input);
             if(weatherString.equals("exit")) break;
             if(!weatherString.isEmpty()){
@@ -37,7 +39,7 @@ public class Main {
             return "";
         }
         if(weather == null){
-            System.out.println("A problem occured while fetching the data.Please try again later");
+            System.out.println("A problem occurred while fetching the data.Please try again later");
             return "exit";
         }
         return weather.toString();
