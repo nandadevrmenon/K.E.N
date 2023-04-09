@@ -111,8 +111,6 @@ public class EasyWeather {
 
     public ArrayList<Double> getThreeDayTempStarting(LocalDate startDate, String city){
         LocalDate now = LocalDate.now();
-        System.out.println(startDate.isAfter(now));
-        System.out.println(startDate.isBefore(now.plusDays(2)));
         if(startDate.isAfter(now.plusDays(2)) || (startDate.isBefore(now))){
             throw new IllegalArgumentException("The trip has to end before 5 days from now.");
         }
@@ -128,8 +126,6 @@ public class EasyWeather {
 
     public ArrayList<Double> getThreeDayHumidityStarting(LocalDate startDate, String city){
         LocalDate now = LocalDate.now();
-        System.out.println(startDate.isAfter(now));
-        System.out.println(startDate.isBefore(now.plusDays(2)));
         if(startDate.isAfter(now.plusDays(2)) || (startDate.isBefore(now))){
             throw new IllegalArgumentException("The trip has to end before 5 days from now.");
         }
@@ -143,8 +139,6 @@ public class EasyWeather {
 
     public ArrayList<Double> getThreeDayWindStarting(LocalDate startDate, String city){
         LocalDate now = LocalDate.now();
-        System.out.println(startDate.isAfter(now));
-        System.out.println(startDate.isBefore(now.plusDays(2)));
         if(startDate.isAfter(now.plusDays(2)) || (startDate.isBefore(now))){
             throw new IllegalArgumentException("The trip has to end before 5 days from now.");
         }
@@ -158,8 +152,6 @@ public class EasyWeather {
 
     public ArrayList<Double> getThreeDayCloudStarting(LocalDate startDate, String city){
         LocalDate now = LocalDate.now();
-        System.out.println(startDate.isAfter(now));
-        System.out.println(startDate.isBefore(now.plusDays(2)));
         if(startDate.isAfter(now.plusDays(2)) || (startDate.isBefore(now))){
             throw new IllegalArgumentException("The trip has to end before 5 days from now.");
         }

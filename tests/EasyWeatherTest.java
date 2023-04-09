@@ -195,7 +195,8 @@ class EasyWeatherTest {
             LocalDate startDate = LocalDate.now().plusDays(1);
             ArrayList<Double> temperatures = easyWeather.getThreeDayTempStarting(startDate, city);
             assertNotNull(temperatures);
-            assertEquals(6, temperatures.size());
+            assertTrue(temperatures.size()>=5);//size can be 5 if the forecast starts 3 days from now
+
 
     }
 
@@ -215,9 +216,9 @@ class EasyWeatherTest {
         String city = "Dublin,ie";
 
         LocalDate startDate = LocalDate.now().plusDays(1);
-        ArrayList<Double> temperatures = easyWeather.getThreeDayHumidityStarting(startDate, city);
-        assertNotNull(temperatures);
-        assertEquals(6, temperatures.size());
+        ArrayList<Double> humidities = easyWeather.getThreeDayHumidityStarting(startDate, city);
+        assertNotNull(humidities);
+        assertTrue(humidities.size()>=5);//size can be 5 if the forecast starts 3 days from now
 
     }
 
@@ -237,9 +238,9 @@ class EasyWeatherTest {
         String city = "Dublin,ie";
 
         LocalDate startDate = LocalDate.now().plusDays(1);
-        ArrayList<Double> temperatures = easyWeather.getThreeDayWindStarting(startDate, city);
-        assertNotNull(temperatures);
-        assertEquals(6, temperatures.size());
+        ArrayList<Double> winds = easyWeather.getThreeDayWindStarting(startDate, city);
+        assertNotNull(winds);
+        assertTrue(winds.size()>=5);//size can be 5 if the forecast starts 3 days from now
 
     }
 
@@ -259,9 +260,9 @@ class EasyWeatherTest {
         String city = "Dublin,ie";
 
         LocalDate startDate = LocalDate.now().plusDays(1);
-        ArrayList<Double> temperatures = easyWeather.getThreeDayCloudStarting(startDate, city);
-        assertNotNull(temperatures);
-        assertTrue(temperatures.size()>=5);//size can be 5 if the forecast starts 3 days from now
+        ArrayList<Double> clouds = easyWeather.getThreeDayCloudStarting(startDate, city);
+        assertNotNull(clouds);
+        assertTrue(clouds.size()>=5);//size can be 5 if the forecast starts 3 days from now
 
     }
 
