@@ -29,9 +29,6 @@ public class EasyOpenAI {
 
         requestBody = new JSONObject();
         messages = new Stack<>();
-
-        addMessage("system","You are an NLP that returns required tokens in the format token,token,token,... You will only return what it required and are not supposed to give any context or explanation as to why you returned that. Also do not use any periods in the output."); // gaslight the bot into thinking it's a weather bot
-
     }
 
     private void addMessage(String role, String content) {
@@ -39,18 +36,38 @@ public class EasyOpenAI {
     }
 
     public String getSingleLocationToken(String message) {
-        addMessage("user",  "Give me only city tokens in the string '"+message+"'. If there are no locations return a token null'");
-        Send();
+        addMessage("system","I am an NLP that returns city tokens in the format token,token,token,... " +
+                "I will only return what is required and I'm not supposed to give any context or explanation as to why I returned that." +
+                " Also I will not use any periods in the outputs I give. Also I will treat single words as tokens as well" +
+                "If there are no cities I will return a token 'null'."); // gaslight the bot into thinking it's a location NLP
+
+        addMessage("user",  "Give me only city tokens in the text '"+message+"'");
+        NLPSend();
         String output = Receive();
         if(output.equals("null")) {
-            System.out.println("Sorry I didn't catch a location in your input.Please try again.");
+            System.out.println("Sorry I didn't catch a location in your input. Please try again.");
             return null;
         }
+        if(output.indexOf(",")!=-1){
+            output=output.substring(0,output.indexOf(","));
+        }
+        messages.clear();
         return output;
     }
 
 
-    private void Send() { // Send request to API
+    private void NLPSend() { // Send request to API
+
+        requestBody.put("model", "gpt-3.5-turbo");
+        requestBody.put("max_tokens", 1000);
+        requestBody.put("messages", messages); // Send messages
+        requestBody.put("temperature", 0.1); // Set temperature to 0.1 // makes AI more predictable
+        requestBody.put("top_p", 0.1); // Set top_p to 0.1      //makes AI more likely to give the same answer every time.
+        StringEntity entity = new StringEntity(requestBody.toString());
+        httpPost.setEntity(entity);
+    }
+
+    private void ItinerarySend() { // Send request to API
 
         requestBody.put("model", "gpt-3.5-turbo");
         requestBody.put("max_tokens", 1000);
@@ -78,7 +95,6 @@ public class EasyOpenAI {
 
         responseObject = new JSONObject(responseString);
         String content = responseObject.getJSONArray("choices").getJSONObject(0).getJSONObject("message").getString("content");
-        System.out.println(content);
         return content;
     }
 }
