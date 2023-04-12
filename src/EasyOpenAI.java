@@ -74,7 +74,7 @@ public class EasyOpenAI {
         }
 
 
-        responseObject = new JSONObject(responseString);
+        JSONObject responseObject = new JSONObject(responseString);
         System.out.println(responseObject.getJSONArray("choices").getJSONObject(0).getJSONObject("message").getString("content"));
     }
 }
