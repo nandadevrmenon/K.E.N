@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -133,7 +132,7 @@ class EasyWeatherTest {
             assertTrue(true);
         }
         else{
-            assertTrue(false);
+            fail();
         }
     }
     //test for invalid city input
@@ -186,7 +185,7 @@ class EasyWeatherTest {
             assertTrue(true);
         }
         else{
-            assertTrue(false);
+            fail();
         }
     }
 
@@ -269,6 +268,7 @@ class EasyWeatherTest {
         String city = "Dublin,ie";
 
         LocalDate startDate = LocalDate.now().plusDays(1);
+
         ArrayList<Double> temperatures = easyWeather.getThreeDayWindStarting(startDate, city);
         assertNotNull(temperatures);
         assertEquals(6, temperatures.size());
@@ -297,20 +297,20 @@ class EasyWeatherTest {
 
     }
 
-//    @Test
-//    public void testThreeDayForecast() {
-//        EasyWeather easyWeather = new EasyWeather();
-//        String city = "Dublin,ie";
-//        LocalDate startDate = LocalDate.now().plusDays(1);
-//        ArrayList<WeatherForecast> threeDayForecast = easyWeather.getThreeDayForecast(city, startDate);
-//        assertNotNull(threeDayForecast);
-//        assertEquals(6, threeDayForecast.size());  // 2 forecasts per day for 3 days
-//        for (WeatherForecast forecast : threeDayForecast) {
-//            assertTrue(forecast.getForecastTime().toLocalDate().isEqual(startDate) ||
-//                    forecast.getForecastTime().toLocalDate().isEqual(startDate.plusDays(1)) ||
-//                    forecast.getForecastTime().toLocalDate().isEqual(startDate.plusDays(2)));
-//            assertTrue(forecast.getForecastTime().getHour() == 10 || forecast.getForecastTime().getHour() == 19);
-//        }
-//    }
+    @Test
+    public void testThreeDayForecast() {
+        EasyWeather easyWeather = new EasyWeather();
+        String city = "Dublin,ie";
+        LocalDate startDate = LocalDate.now().plusDays(1);
+        ArrayList<WeatherForecast> threeDayForecast = easyWeather.getThreeDayForecast(city, startDate);
+        assertNotNull(threeDayForecast);
+        assertEquals(6, threeDayForecast.size());  // 2 forecasts per day for 3 days
+        for (WeatherForecast forecast : threeDayForecast) {
+            assertTrue(forecast.getForecastTime().toLocalDate().isEqual(startDate) ||
+                    forecast.getForecastTime().toLocalDate().isEqual(startDate.plusDays(1)) ||
+                    forecast.getForecastTime().toLocalDate().isEqual(startDate.plusDays(2)));
+            assertTrue(forecast.getForecastTime().getHour() == 9 || forecast.getForecastTime().getHour() == 18);
+        }
+    }
 
 }
