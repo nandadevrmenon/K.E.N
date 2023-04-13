@@ -9,6 +9,9 @@ import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Stack;
 
 public class EasyOpenAI {
@@ -35,7 +38,7 @@ public class EasyOpenAI {
         messages.add(new JSONObject().put("role", role).put("content", content));
     }
 
-    public String getSingleLocationToken(String message) {
+    public String getSingleCityToken(String message) {
         addMessage("system","I am an NLP that returns city tokens in the format token,token,token,... " +
                 "I will only return what is required and I'm not supposed to give any context or explanation as to why I returned that." +
                 " Also I will not use any periods in the outputs I give. Also I will treat single words as tokens as well" +
@@ -54,6 +57,24 @@ public class EasyOpenAI {
         }
         messages.clear();
         return output;
+    }
+
+    public ArrayList<String> getAllCityTokens(String message){
+        addMessage("system","I am an NLP that returns city tokens in the format token,token,token,... " +
+                "I will only return what is required and I'm not supposed to give any context or explanation as to why I returned that." +
+                " I will not use any periods in the outputs I give.I will not return any country names.  Also I will treat single words as tokens as well" +
+                "If there are no cities I will return a token 'null'."); // gaslight the bot into thinking it's an NLP that returns location tokens
+
+        addMessage("user",  "Give me only city tokens in the text '"+message+"'");      //gets chatgpt to return only city tokens from user input text
+        NLPSend();
+        String tokens = Receive();
+        if(tokens.contains("null")) {     //the API will return 'null' if there was no location token in the input
+            return null;
+        }
+        messages.clear();
+        String[] tokenArray = tokens.split(",");
+        ArrayList<String> tokenList = new ArrayList<String>(Arrays.asList(tokenArray));
+        return tokenList;
     }
 
 
