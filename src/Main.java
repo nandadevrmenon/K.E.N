@@ -2,8 +2,13 @@
 import com.github.prominence.openweathermap.api.model.weather.Weather;
 import org.apache.hc.core5.http.ParseException;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class Main {
@@ -25,6 +30,29 @@ public class Main {
 
     }
 
+    public static String askUserAboutMode(Scanner scanner) {
+        String mode = null;
+        System.out.println("I can either tell you the current weather in a city or " +
+                "I can help you plan clothes for a 3 day trip around 5 cities.");
+        System.out.println("Which one can I help you with ? Also you can type 'exit' to get out of the program.");
+        while (scanner.hasNext()) {
+            mode = scanner.nextLine().toLowerCase().trim();     //gets the trimmed and lowercase input
+            if (mode.contains("current") || mode.contains("live")) {     //if the input conatins the words live or current , we assume they
+                // want the current weather at a location
+                mode = "current";
+                break;
+            } else if (mode.contains("plan") || mode.contains("trip")) {       //else if the input contains the words plan or trip, we assume they want to plan a trip
+                mode = "trip";
+                break;
+            } else if (mode.contains("exit")) {         //if the user wants to exit we break out
+                mode = null;
+                break;
+            } else {          //if input contains none of those keywords, we  ask for clearer input
+                System.out.println("Sorry I couldn't understand could you be a bit clearer?");
+            }
+        }
+        return mode;
+    }
 
     public static void askForCity(Scanner scanner) {
         System.out.println("what place would you like to know the current weather for?");
@@ -62,36 +90,15 @@ public class Main {
 
     }
 
-    public static String askUserAboutMode(Scanner scanner) {
-        String mode = null;
-        System.out.println("I can either tell you the current weather in a city or " +
-                "I can help you plan clothes for a 3 day trip around 5 cities.");
-        System.out.println("Which one can I help you with ? Also you can type 'exit' to get out of the program.");
-        while (scanner.hasNext()) {
-            mode = scanner.nextLine().toLowerCase().trim();     //gets the trimmed and lowercase input
-            if (mode.contains("current") || mode.contains("live")) {     //if the input conatins the words live or current , we assume they
-                // want the current weather at a location
-                mode = "current";
-                break;
-            } else if (mode.contains("plan") || mode.contains("trip")) {       //else if the input contains the words plan or trip, we assume they want to plan a trip
-                mode = "trip";
-                break;
-            } else if (mode.contains("exit")) {         //if the user wants to exit we break out
-                mode = null;
-                break;
-            } else {          //if input contains none of those keywords, we  ask for clearer input
-                System.out.println("Sorry I couldn't understand could you be a bit clearer?");
-            }
-        }
-        return mode;
-    }
+
 
 
     public static void getWeatherForTrip(Scanner scanner) {
         System.out.println("You are now in Trip-Planning Mode. Type 'exit' if you want to exit this mode.");
         System.out.println("enter the names of 5 cities that you are going travel to within 3 days ");
-        ArrayList<String> locations = get5CitiesFromUser(scanner);
-
+//      ArrayList<String> locations = get5CitiesFromUser(scanner);
+        LocalDate startDate = getStartDateFromUser(scanner);
+        System.out.println("ok so the start date is :"+startDate.toString());
 
     }
 
@@ -136,6 +143,50 @@ public class Main {
             }
         }
         return locations;
+    }
+
+    private static LocalDate getStartDateFromUser(Scanner scanner) {
+        System.out.println("When are you starting the trip?( Accepted formats: today,tomorrow,day after tomorrow,dd/MM/YYYY)");
+        System.out.println("(Note: The API we use only allows a 5 day forecast so your trip has to start between today and the day after tomorrow.)");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        while(scanner.hasNext()) {
+            String input = scanner.nextLine().toLowerCase().trim();
+            if(input.isEmpty()) continue;
+            if (input.contains("now") || input.contains("today")) {
+                return LocalDate.now();
+            }
+            else if (input.contains("tomorrow")) {
+                if (input.contains("day after")) {
+                    return LocalDate.now().plusDays(2);
+                }
+                return LocalDate.now().plusDays(1);
+            }
+            else if (validDate(input,formatter)) {
+                LocalDate startDate = LocalDate.parse(input, formatter);
+                if(startDate.isAfter(LocalDate.now().plusDays(2)) || (startDate.isBefore(LocalDate.now()))){
+                    System.out.println("That date is outside the bounds for which I can provide you a forecast. Please try again when the date comes closer.");
+                    continue;
+                }
+                return startDate;
+            }
+            else {
+                System.out.println("The date you have entered is not in a format I can understand. Please try to be clearer.");
+            }
+        }
+       return null;
+    }
+
+
+
+
+    public static boolean validDate(String input, DateTimeFormatter formatter){
+        try{
+            LocalDate.parse(input,formatter);
+        }catch(DateTimeParseException dtpe){
+            return false;
+        }
+        return true;
     }
 }
 
