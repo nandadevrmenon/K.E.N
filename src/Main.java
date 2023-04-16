@@ -1,8 +1,10 @@
 
+import com.github.prominence.openweathermap.api.model.forecast.WeatherForecast;
 import com.github.prominence.openweathermap.api.model.weather.Weather;
 import org.apache.hc.core5.http.ParseException;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -26,6 +28,8 @@ public class Main {
                 getWeatherForTrip(scanner);
             }
         } while (mode != null);
+//        ArrayList<WeatherForecast> weathers = EasyWeather.getThreeDayForecast("mumbai",LocalDate.now());
+
 
 
     }
@@ -64,10 +68,14 @@ public class Main {
             }
             input = openAI.getSingleCityToken(input);   //returns only one location token out of whatever input the user gave us
             String weatherString = getWeather(input);          //we get the weather for that location using the weather API
-            if (!weatherString.isEmpty()) {                       //if the weather String actually has a value we print it out
+            if(weatherString.equals("exit")){
+                break;
+            }
+            else if (!weatherString.isEmpty()) {                       //if the weather String actually has a value we print it out
                 System.out.println("The weather there is " + "\r\n" + weatherString);
                 System.out.println("Would you like to know the weather at another place? If not, type 'exit'.");
             }
+
         }
     }
 
@@ -96,8 +104,8 @@ public class Main {
     public static void getWeatherForTrip(Scanner scanner) {
         System.out.println("You are now in Trip-Planning Mode. Type 'exit' if you want to exit this mode.");
         System.out.println("enter the names of 5 cities that you are going travel to within 3 days ");
-//      ArrayList<String> locations = get5CitiesFromUser(scanner);
-        LocalDate startDate = getStartDateFromUser(scanner);
+      ArrayList<String> locations = get5CitiesFromUser(scanner);
+        LocalDate startDate = getStartDateFromUser(scanner,locations);
         System.out.println("ok so the start date is :"+startDate.toString());
 
     }
@@ -145,7 +153,7 @@ public class Main {
         return locations;
     }
 
-    private static LocalDate getStartDateFromUser(Scanner scanner) {
+    private static LocalDate getStartDateFromUser(Scanner scanner, ArrayList<String> locations) {
         System.out.println("When are you starting the trip?( Accepted formats: today,tomorrow,day after tomorrow,dd/MM/YYYY)");
         System.out.println("(Note: The API we use only allows a 5 day forecast so your trip has to start between today and the day after tomorrow.)");
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -154,6 +162,12 @@ public class Main {
             String input = scanner.nextLine().toLowerCase().trim();
             if(input.isEmpty()) continue;
             if (input.contains("now") || input.contains("today")) {
+                if(LocalTime.now().isAfter(LocalTime.of(9, 00, 00, 0))){
+                    System.out.println("Since your starting the trip now, I am assuming the schedule looks like this: ");
+                    System.out.println("Day one : " + locations.get(0));
+                    System.out.println("Day two : " + locations.get(1) + " and " + locations.get(2));
+                    System.out.println("Day three : "+locations.get(3) + " and " + locations.get(4));
+                }
                 return LocalDate.now();
             }
             else if (input.contains("tomorrow")) {

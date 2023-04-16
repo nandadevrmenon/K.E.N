@@ -13,8 +13,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class EasyWeather {
-    private OpenWeatherMapClient weatherClient = OpenWeatherAPI_Singleton.getInstance();
-    public Weather getWeatherByCity(String city) throws IllegalArgumentException{
+    private static OpenWeatherMapClient weatherClient = OpenWeatherAPI_Singleton.getInstance();
+    public static Weather getWeatherByCity(String city) throws IllegalArgumentException{
         Weather weather;
         try{
             weather= weatherClient.currentWeather()
@@ -33,7 +33,7 @@ public class EasyWeather {
         return weather;
     }
 
-    public double getTemperatureByCity(String city){
+    public static double getTemperatureByCity(String city){
         Weather weather;
         try{
             weather = getWeatherByCity(city);
@@ -48,7 +48,7 @@ public class EasyWeather {
             return temp;
     }
 
-    public double getHumidityByCity(String city){
+    public static double getHumidityByCity(String city){
         Weather weather;
         try{
             weather = getWeatherByCity(city);
@@ -62,7 +62,7 @@ public class EasyWeather {
         double humidity = weather.getHumidity().getValue();
         return humidity;
     }
-    public double getWindByCity(String city){
+    public static double getWindByCity(String city){
         Weather weather;
         try{
             weather = getWeatherByCity(city);
@@ -77,7 +77,7 @@ public class EasyWeather {
         return wind;
     }
 
-    public double getCloudByCity(String city){
+    public static double getCloudByCity(String city){
         Weather weather;
         try{
             weather = getWeatherByCity(city);
@@ -92,7 +92,7 @@ public class EasyWeather {
         return cloud;
     }
 
-    public double getRainByCity(String city){
+    public static double getRainByCity(String city){
         Weather weather;
         try{
             weather = getWeatherByCity(city);
@@ -109,7 +109,7 @@ public class EasyWeather {
         return rain.getOneHourLevel();
     }
 
-    public ArrayList<Double> getThreeDayTempStarting(LocalDate startDate, String city){
+    public static ArrayList<Double> getThreeDayTempStarting(LocalDate startDate, String city){
         LocalDate now = LocalDate.now();
         if(startDate.isAfter(now.plusDays(2)) || (startDate.isBefore(now))){
             throw new IllegalArgumentException("The trip has to end before 5 days from now.");
@@ -124,7 +124,7 @@ public class EasyWeather {
         return temperatures;
     }
 
-    public ArrayList<Double> getThreeDayHumidityStarting(LocalDate startDate, String city){
+    public static ArrayList<Double> getThreeDayHumidityStarting(LocalDate startDate, String city){
         LocalDate now = LocalDate.now();
         if(startDate.isAfter(now.plusDays(2)) || (startDate.isBefore(now))){
             throw new IllegalArgumentException("The trip has to end before 5 days from now.");
@@ -137,7 +137,7 @@ public class EasyWeather {
         return humidities;
     }
 
-    public ArrayList<Double> getThreeDayWindStarting(LocalDate startDate, String city){
+    public static ArrayList<Double> getThreeDayWindStarting(LocalDate startDate, String city){
         LocalDate now = LocalDate.now();
         if(startDate.isAfter(now.plusDays(2)) || (startDate.isBefore(now))){
             throw new IllegalArgumentException("The trip has to end before 5 days from now.");
@@ -150,7 +150,7 @@ public class EasyWeather {
         return winds;
     }
 
-    public ArrayList<Double> getThreeDayCloudStarting(LocalDate startDate, String city){
+    public static ArrayList<Double> getThreeDayCloudStarting(LocalDate startDate, String city){
         LocalDate now = LocalDate.now();
         if(startDate.isAfter(now.plusDays(2)) || (startDate.isBefore(now))){
             throw new IllegalArgumentException("The trip has to end before 5 days from now.");
@@ -164,7 +164,7 @@ public class EasyWeather {
     }
 
 
-    public ArrayList<WeatherForecast> getThreeDayForecast(String city,LocalDate startDate){
+    public static ArrayList<WeatherForecast> getThreeDayForecast(String city,LocalDate startDate){
         Forecast fiveDaysWeather;
         try{
             fiveDaysWeather = weatherClient
@@ -201,7 +201,10 @@ public class EasyWeather {
         return threeDayForecast;
     }
 
-
+    public static WeatherForecast getFirstDayFirstWeather(String location,LocalDate startDate){
+        ArrayList<WeatherForecast> allForecasts = getThreeDayForecast(location,startDate);
+        return allForecasts.get(0);
+    }
 
 
 
