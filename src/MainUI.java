@@ -21,9 +21,16 @@ public class MainUI extends Application {
             throw new RuntimeException(e);
         }
 
-        stage.setTitle("WeatherBot");
-        stage.setScene(root.getScene());
+        // load style
+        root.getStylesheets().add("style.css");
+
+        // set the title of the window
+        stage.setTitle("Weather App");
+        // set the scene of the window
+        stage.setScene(new javafx.scene.Scene(root));
+        // show the window
         stage.show();
+
     }
 
 }
