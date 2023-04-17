@@ -1,0 +1,27 @@
+/* Set the background color of the AnchorPane to black */
+--fx-background-color {
+rgba(52, 53, 65);
+}
+
+.anchor-pane {
+    -fx-background-color: rgba(52,53,65);
+}
+
+/* Set the text color of the TextArea to white */
+.text-area {
+    -fx-text-fill: white;
+}
+
+.answer-area {
+    -fx-background-color: rgba(50,50,60);
+}
+
+/* Set the prompt text color of the TextField to gray */
+.text-field .text {
+    -fx-prompt-text-fill: gray;
+}
+
+/* Set the font color of the Text nodes to white */
+.text {
+    -fx-fill: white;
+}
