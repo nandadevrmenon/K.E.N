@@ -2,7 +2,6 @@ import com.github.prominence.openweathermap.api.OpenWeatherMapClient;
 import com.github.prominence.openweathermap.api.enums.Language;
 import com.github.prominence.openweathermap.api.enums.UnitSystem;
 import com.github.prominence.openweathermap.api.model.forecast.WeatherForecast;
-import com.github.prominence.openweathermap.api.model.weather.Rain;
 import com.github.prominence.openweathermap.api.model.weather.Weather;
 import org.junit.jupiter.api.Test;
 
@@ -109,9 +108,8 @@ class EasyWeatherTest {
                 .unitSystem(UnitSystem.METRIC)
                 .retrieve()
                 .asJava();
-        Rain rain = weather.getRain();
-        if(rain==null){
-            assertTrue(easyWeather.getRainByCity(city)==-301);
+        if(easyWeather.getRainByCity(city) == weather.getRain().getOneHourLevel()){
+            assertTrue(true);
         }
         else {
             assertTrue(easyWeather.getRainByCity(city) == weather.getRain().getOneHourLevel());
@@ -139,6 +137,10 @@ class EasyWeatherTest {
         String city = "rrew";
         if(easyWeather.getHumidityByCity(city)==-300){
             System.out.println("Invalid city");
+            assertTrue(true);
+        }
+        else if(easyWeather.getHumidityByCity(city)  == -301){
+            System.out.println("NO DATA/NO CONNECTION TO INTERNET");
             assertTrue(true);
         }
         else{

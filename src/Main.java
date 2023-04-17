@@ -161,7 +161,8 @@ public class Main {
         return locations;
     }
 
-    private static LocalDate getStartDateFromUser(Scanner scanner, ArrayList<String> locations) {
+    //I made this public so that i can use it in the test class
+    public static LocalDate getStartDateFromUser(Scanner scanner, ArrayList<String> locations) {
         System.out.println("When are you starting the trip?( Accepted formats: today,tomorrow,day after tomorrow,dd/MM/YYYY)");
         System.out.println("(Note: The API we use only allows a 5 day forecast so your trip has to start between today and the day after tomorrow.)");
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
