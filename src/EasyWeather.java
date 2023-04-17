@@ -192,7 +192,6 @@ public class EasyWeather {
             WeatherForecast forecast = fdit.next();
             if(forecast.getForecastTime().isBefore(startDate.atStartOfDay())){continue;}
             if(forecast.getForecastTime().getHour()==19 || forecast.getForecastTime().getHour()==10){
-                System.out.println(forecast);
                 threeDayForecast.add(forecast);
                 count++;
             }
@@ -201,10 +200,69 @@ public class EasyWeather {
         return threeDayForecast;
     }
 
-    public static WeatherForecast getFirstDayFirstWeather(String location,LocalDate startDate){
-        ArrayList<WeatherForecast> allForecasts = getThreeDayForecast(location,startDate);
+    private static WeatherForecast getFirstForecast(String location,LocalDate startDate){
+        ArrayList<WeatherForecast> allForecasts = null;
+        try{
+            allForecasts = getThreeDayForecast(location,startDate);
+        }
+        catch(IllegalArgumentException iae){
+            return null;
+        }
         return allForecasts.get(0);
     }
+    private static WeatherForecast getSecondForecast(String location,LocalDate startDate){
+        ArrayList<WeatherForecast> allForecasts = null;
+        try{
+            allForecasts = getThreeDayForecast(location,startDate);
+        }
+        catch(IllegalArgumentException iae){
+            return null;
+        }
+        return allForecasts.get(1);
+    }
+    private static WeatherForecast getThirdForecast(String location,LocalDate startDate){
+        ArrayList<WeatherForecast> allForecasts = null;
+        try{
+            allForecasts = getThreeDayForecast(location,startDate);
+        }
+        catch(IllegalArgumentException iae){
+            return null;
+        }
+        return allForecasts.get(2);
+    }
+    private static WeatherForecast getFourthForecast(String location,LocalDate startDate){
+        ArrayList<WeatherForecast> allForecasts = null;
+        try{
+            allForecasts = getThreeDayForecast(location,startDate);
+        }
+        catch(IllegalArgumentException iae){
+            return null;
+        }
+        return allForecasts.get(3);
+    }
+    private static WeatherForecast getFifthForecast(String location,LocalDate startDate){
+        ArrayList<WeatherForecast> allForecasts = null;
+        try{
+            allForecasts = getThreeDayForecast(location,startDate);
+        }
+        catch(IllegalArgumentException iae){
+            return null;
+        }
+        return allForecasts.get(4);
+    }
+
+    public static ArrayList<WeatherForecast> getTripForecast(ArrayList<String> locations,LocalDate startDate){
+        ArrayList<WeatherForecast> tripForecasts = new ArrayList<WeatherForecast>();
+        tripForecasts.add(getFirstForecast(locations.get(0),startDate));
+        tripForecasts.add(getSecondForecast(locations.get(1),startDate));
+        tripForecasts.add(getThirdForecast(locations.get(2),startDate));
+        tripForecasts.add(getFourthForecast(locations.get(3),startDate));
+        tripForecasts.add(getFifthForecast(locations.get(4),startDate));
+
+        return tripForecasts;
+    }
+
+
 
 
 

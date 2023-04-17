@@ -36,9 +36,8 @@ public class Main {
 
     public static String askUserAboutMode(Scanner scanner) {
         String mode = null;
-        System.out.println("I can either tell you the current weather in a city or " +
-                "I can help you plan clothes for a 3 day trip around 5 cities.");
-        System.out.println("Which one can I help you with ? Also you can type 'exit' to get out of the program.");
+        System.out.println("I have live weather mode and trip planning mode. Which mode would you like to select?");
+        System.out.println("Also you can type 'exit' to get out of the program.");
         while (scanner.hasNext()) {
             mode = scanner.nextLine().toLowerCase().trim();     //gets the trimmed and lowercase input
             if (mode.contains("current") || mode.contains("live")) {     //if the input conatins the words live or current , we assume they
@@ -104,9 +103,15 @@ public class Main {
     public static void getWeatherForTrip(Scanner scanner) {
         System.out.println("You are now in Trip-Planning Mode. Type 'exit' if you want to exit this mode.");
         System.out.println("enter the names of 5 cities that you are going travel to within 3 days ");
-      ArrayList<String> locations = get5CitiesFromUser(scanner);
+        ArrayList<String> locations = get5CitiesFromUser(scanner);
         LocalDate startDate = getStartDateFromUser(scanner,locations);
         System.out.println("ok so the start date is :"+startDate.toString());
+        System.out.println("So the weather at those places for the trip is:");
+        ArrayList<WeatherForecast> tripForecast = EasyWeather.getTripForecast(locations,startDate);
+        for(int i = 0 ; i < 5 ; i++){
+            System.out.print(capitaliseFirst(locations.get(i))+": ");
+            System.out.println(tripForecast.get(i));
+        }
 
     }
 
@@ -162,6 +167,10 @@ public class Main {
             String input = scanner.nextLine().toLowerCase().trim();
             if(input.isEmpty()) continue;
             if (input.contains("now") || input.contains("today")) {
+                if(LocalTime.now().isAfter(LocalTime.of(18,0,0,0))){
+                    System.out.println("The day is almost over. You can use the live weather to check today's weather \n and then we can plan the trip for you starting tomorrow.");
+                    return LocalDate.now().plusDays(1);
+                }
                 if(LocalTime.now().isAfter(LocalTime.of(9, 00, 00, 0))){
                     System.out.println("Since your starting the trip now, I am assuming the schedule looks like this: ");
                     System.out.println("Day one : " + locations.get(0));
@@ -201,6 +210,11 @@ public class Main {
             return false;
         }
         return true;
+    }
+
+    public static String capitaliseFirst(String str){
+        String result = str.substring(0,1).toUpperCase();
+        return result+str.substring(1);
     }
 }
 
