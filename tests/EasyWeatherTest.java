@@ -87,16 +87,20 @@ class EasyWeatherTest {
                 .asJava();
         if(easyWeather.getWindByCity(city) == weather.getWind().getSpeed()){
             assertTrue(true);
+        } else if (weather.getWind()==null && easyWeather.getWindByCity(city) == -301){
+            System.out.println("NO DATA/NO CONNECTION TO INTERNET");
+            assertTrue(true);
         }
         else{
             assertTrue(false);
         }
+
     }
 
     @Test
     void testGetCloudByCity(){
         EasyWeather easyWeather = new EasyWeather();
-        String city = "Dublin,ie";
+        String city = "Las Vegas,us";
 
         OpenWeatherMapClient weatherClient = OpenWeatherAPI_Singleton.getInstance();
 
@@ -108,6 +112,10 @@ class EasyWeatherTest {
                 .retrieve()
                 .asJava();
         if(easyWeather.getCloudByCity(city) == weather.getClouds().getValue()){
+            assertTrue(true);
+        }
+        else if (weather.getClouds()==null && easyWeather.getCloudByCity(city) == -301){
+            System.out.println("NO DATA/NO CONNECTION TO INTERNET");
             assertTrue(true);
         }
         else{
@@ -129,12 +137,16 @@ class EasyWeatherTest {
                 .unitSystem(UnitSystem.METRIC)
                 .retrieve()
                 .asJava();
-        if(easyWeather.getRainByCity(city) == weather.getRain().getOneHourLevel()){
+        if (weather.getRain()==null && easyWeather.getRainByCity(city)==-301  ){
+            assertTrue(true);
+        }
+        else if(easyWeather.getRainByCity(city) == weather.getRain().getOneHourLevel()){
             assertTrue(true);
         }
         else{
             assertTrue(false);
         }
+
     }
     //test for invalid city input
     @Test
