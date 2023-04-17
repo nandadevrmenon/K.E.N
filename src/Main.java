@@ -40,6 +40,7 @@ public class Main {
         System.out.println("Also you can type 'exit' to get out of the program.");
         while (scanner.hasNext()) {
             mode = scanner.nextLine().toLowerCase().trim();     //gets the trimmed and lowercase input
+            if(mode.isEmpty()) continue;
             if (mode.contains("current") || mode.contains("live")) {     //if the input conatins the words live or current , we assume they
                 // want the current weather at a location
                 mode = "current";
@@ -62,6 +63,7 @@ public class Main {
         EasyOpenAI openAI = new EasyOpenAI();
         while (scanner.hasNext()) {
             String input = scanner.nextLine().toLowerCase().trim();     //makes the input all lowercase and removes leading and trialing whitespace
+            if(input.isEmpty()) continue;
             if (input.contains("exit")) {
                 break;
             }
@@ -120,6 +122,7 @@ public class Main {
         ArrayList<String> locations = new ArrayList<String>();
         while (scanner.hasNext()) {
             String input = scanner.nextLine().toLowerCase().trim();     //makes the input all lowercase and removes leading and trialing whitespace
+            if(input.isEmpty()) continue;
             if (input.contains("exit")) {
                 break;
             } else if (input.contains("clear")) {       //if input is clear it clears the already registered locations
