@@ -56,6 +56,10 @@ public class EasyOpenAI {
             output=output.substring(0,output.indexOf(","));
         }
         messages.clear();
+        if(output.contains("dublin")){
+            System.out.println(output);
+            return "dublin,ie";
+        }
         return output;
     }
 
@@ -74,6 +78,11 @@ public class EasyOpenAI {
         messages.clear();
         String[] tokenArray = tokens.split(",");
         ArrayList<String> tokenList = new ArrayList<String>(Arrays.asList(tokenArray));
+        for(int i = 0;i<tokenList.size();i++){
+            if(tokenList.get(i).contains("dublin")){
+                tokenList.set(i,"dublin,ie");
+            }
+        }
         return tokenList;
     }
 

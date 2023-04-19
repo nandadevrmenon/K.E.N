@@ -17,7 +17,7 @@ class EasyOpenAITest {
         assertTrue(output.equals("mumbai"));
         input ="Whats the weather in dublin right now?";
         output = openai.getSingleCityToken(input);
-        assertTrue(output.equals("dublin"));
+        assertTrue(output.equals("dublin,ie"));
     }
 
     @Test
