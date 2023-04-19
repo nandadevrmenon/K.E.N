@@ -1,16 +1,11 @@
-import com.github.prominence.openweathermap.api.model.weather.Weather;
-import org.apache.hc.core5.http.ParseException;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 
+import org.junit.jupiter.api.Test;
 import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
-import com.github.prominence.openweathermap.api.model.forecast.WeatherForecast;
-import com.github.prominence.openweathermap.api.model.weather.Weather;
 import static org.junit.Assert.*;
 
 public class MainTest {
@@ -28,12 +23,105 @@ public class MainTest {
     @Test
     public void testAskUserAboutModeCurrent2() {
         // Simulate user input "live\n"
-        ByteArrayInputStream in = new ByteArrayInputStream("current\n".getBytes());
-        System.setIn(in);
+        System.setIn(new ByteArrayInputStream("current\r\n trip".getBytes()));
         Scanner scanner = new Scanner(System.in);
         String mode = Main.askUserAboutMode(scanner);
         assertEquals("current", mode);
+
+        mode = Main.askUserAboutMode(scanner);
+
+        assertEquals("trip", mode);
+
     }
+
+
+    @Test
+    public void testGetWeatherSpecificsTemp(){
+        System.setIn(new ByteArrayInputStream("temp\r\ntemperature\ncold\nwarm\nhot\nchilly\nfeel".getBytes()));
+        Scanner scanner = new Scanner(System.in);
+        String specifics = Main.getWeatherSpecifics(scanner);
+        assertEquals("temperature", specifics);
+        specifics = Main.getWeatherSpecifics(scanner);
+        assertEquals("temperature", specifics);
+        specifics = Main.getWeatherSpecifics(scanner);
+        assertEquals("temperature", specifics);
+        specifics = Main.getWeatherSpecifics(scanner);
+        assertEquals("temperature", specifics);
+        specifics = Main.getWeatherSpecifics(scanner);
+        assertEquals("temperature", specifics);
+        specifics = Main.getWeatherSpecifics(scanner);
+        assertEquals("temperature", specifics);
+        specifics = Main.getWeatherSpecifics(scanner);
+        assertEquals("temperature", specifics);
+    }
+    @Test
+    public void testGetWeatherSpecificsRain(){
+        System.setIn(new ByteArrayInputStream("rain\r\nprecipitation\r\nwet\n\rsnow\n\rpouring\nhail".getBytes()));
+        Scanner scanner = new Scanner(System.in);
+        String specifics = Main.getWeatherSpecifics(scanner);
+        assertEquals("rain", specifics);
+        specifics = Main.getWeatherSpecifics(scanner);
+        assertEquals("rain", specifics);
+        specifics = Main.getWeatherSpecifics(scanner);
+        assertEquals("rain", specifics);
+        specifics = Main.getWeatherSpecifics(scanner);
+        assertEquals("rain", specifics);
+        specifics = Main.getWeatherSpecifics(scanner);
+        assertEquals("rain", specifics);
+        specifics = Main.getWeatherSpecifics(scanner);
+        assertEquals("rain", specifics);
+        specifics = Main.getWeatherSpecifics(scanner);
+        assertEquals("rain", specifics);
+    }
+
+    @Test
+    public void testGetWeatherSpecificsWind() {
+        System.setIn(new ByteArrayInputStream("wind\r\nblowing\n\rstrong\n\rstormy\n\rwindy\n\rwind".getBytes()));
+        Scanner scanner = new Scanner(System.in);
+        String specifics = Main.getWeatherSpecifics(scanner);
+        assertEquals("wind", specifics);
+        specifics = Main.getWeatherSpecifics(scanner);
+        assertEquals("wind", specifics);
+        specifics = Main.getWeatherSpecifics(scanner);
+        assertEquals("wind", specifics);
+        specifics = Main.getWeatherSpecifics(scanner);
+        assertEquals("wind", specifics);
+        specifics = Main.getWeatherSpecifics(scanner);
+        assertEquals("wind", specifics);
+    }
+    @Test
+    public void testGetWeatherSpecificsClouds() {
+        System.setIn(new ByteArrayInputStream("clouds\r\nclear\n\rcloudy\n\rclouds\n\rpartly cloudy\n\rpartly sunny\n\rpartly cloudy".getBytes()));
+        Scanner scanner = new Scanner(System.in);
+        String specifics = Main.getWeatherSpecifics(scanner);
+        assertEquals("clouds", specifics);
+        specifics = Main.getWeatherSpecifics(scanner);
+        assertEquals("clouds", specifics);
+        specifics = Main.getWeatherSpecifics(scanner);
+        assertEquals("clouds", specifics);
+        specifics = Main.getWeatherSpecifics(scanner);
+        assertEquals("clouds", specifics);
+        specifics = Main.getWeatherSpecifics(scanner);
+        assertEquals("clouds", specifics);
+        specifics = Main.getWeatherSpecifics(scanner);
+        assertEquals("clouds", specifics);
+    }
+    @Test
+    public void testGetWeatherSpecificsHumidity() {
+        System.setIn(new ByteArrayInputStream("humidity\r\nhumid\n\rmoist\n\rwet\n\rwet".getBytes()));
+        Scanner scanner = new Scanner(System.in);
+        String specifics = Main.getWeatherSpecifics(scanner);
+        assertEquals("humidity", specifics);
+        specifics = Main.getWeatherSpecifics(scanner);
+        assertEquals("humidity", specifics);
+        specifics = Main.getWeatherSpecifics(scanner);
+        assertEquals("humidity", specifics);
+        specifics = Main.getWeatherSpecifics(scanner);
+        assertEquals("humidity", specifics);
+    }
+
+
+
 
     @Test
     public void testAskUserAboutModeTrip1(){
@@ -65,15 +153,15 @@ public class MainTest {
     }
 
 //    @Test
-//    public void testAskUserAboutMode_invalidInput() {
-//        String input = "something";
+//    void testAskForCity(){
+//        String input = "Cork\n";
 //        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
 //        System.setIn(in);
 //        Scanner scanner = new Scanner(System.in);
-//        String result = Main.askUserAboutMode(scanner);
-//        String expected ="Sorry I couldn't understand could you be a bit clearer?";
-//        System.out.println(result);
-//        assertTrue(result.equals(expected));
+//
+//        String city = Main.askForCity(scanner);
+//
+//        assertEquals("cork", city);
 //    }
 
     @Test
@@ -91,19 +179,7 @@ public class MainTest {
         assertEquals("", weatherInfo);
     }
 
-    @Test
-    public void testGet5CitiesFromUser() {//This one passes depending if the chatGPT times out or not
-        // Mock user input
-        ByteArrayInputStream in = new ByteArrayInputStream("New York\nParis\nTokyo\ndublin\n\nexit\n".getBytes());
-        System.setIn(in);
-        Scanner scanner = new Scanner(System.in);
 
-        // Call the method to be tested
-        ArrayList<String> locations = Main.get5CitiesFromUser(scanner);
-
-        // Test the output
-        assertEquals(Arrays.asList("new york", "paris", "tokyo", "dublin"), locations);
-    }
 
     @Test
      void testGetStartDateFromUser() {

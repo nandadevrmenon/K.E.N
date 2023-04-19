@@ -220,6 +220,10 @@ public class Main {
         String result = str.substring(0,1).toUpperCase();
         return result+str.substring(1);
     }
+
+    public static String getWeatherSpecifics(Scanner scanner){
+        return "";
+    }
 }
 
 
