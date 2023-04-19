@@ -114,7 +114,6 @@ public class EasyOpenAI {
             throw new RuntimeException(e);
         }
 
-
         responseObject = new JSONObject(responseString);
         String content = responseObject.getJSONArray("choices").getJSONObject(0).getJSONObject("message").getString("content");
         return content;
