@@ -251,9 +251,13 @@ public class EasyWeather {
     public static ArrayList<WeatherForecast> getTripForecast(ArrayList<String> locations,LocalDate startDate){
         ArrayList<WeatherForecast> tripForecasts = new ArrayList<WeatherForecast>();
         tripForecasts.add(getFirstForecast(locations.get(0),startDate));
+        cooldown();
         tripForecasts.add(getSecondForecast(locations.get(1),startDate));
+        cooldown();
         tripForecasts.add(getThirdForecast(locations.get(2),startDate));
+        cooldown();
         tripForecasts.add(getFourthForecast(locations.get(3),startDate));
+        cooldown();
         tripForecasts.add(getFifthForecast(locations.get(4),startDate));
 
         return tripForecasts;
