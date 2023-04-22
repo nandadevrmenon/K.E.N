@@ -15,7 +15,8 @@ import java.util.regex.Pattern;
 
 public class Main {
     public static void main(String[] args) throws IOException, ParseException {
-        System.out.println("Hi, I'm WeatherBot. I can help you with all your weather needs.");
+        System.out.println("Hi, I'm WeatherBot. I can help you with all your weather needs.\n" +
+                "I can understand you better if you type in full sentences.");
         String mode = null;
         Scanner scanner = new Scanner(System.in);
         do {
@@ -28,8 +29,6 @@ public class Main {
                 getWeatherForTrip(scanner);
             }
         } while (mode != null);
-//        ArrayList<WeatherForecast> weathers = EasyWeather.getThreeDayForecast("mumbai",LocalDate.now());
-
 
 
     }
@@ -58,7 +57,7 @@ public class Main {
         return mode;
     }
 
-    public static void askForCity(Scanner scanner) {
+    public static void askForCity(Scanner scanner) {        //Live Weather Mode
         System.out.println("what place would you like to know the current weather for?");
         EasyOpenAI openAI = new EasyOpenAI();
         while (scanner.hasNext()) {
@@ -81,10 +80,9 @@ public class Main {
     }
 
     public static String getWeather(String city) {
-        EasyWeather easyWeather = new EasyWeather();
         Weather weather = null;
         try {
-            weather = easyWeather.getWeatherByCity(city);
+            weather = EasyWeather.getWeatherByCity(city);
         } catch (IllegalArgumentException iae) {       //if there is an illegal argument exception it probably means
             // there is a spelling mistake in the location or the location does not exist
             System.out.println(iae.getMessage());
@@ -99,17 +97,14 @@ public class Main {
 
     }
 
-
-
-
-    public static void getWeatherForTrip(Scanner scanner) {
+    public static void getWeatherForTrip(Scanner scanner) {         //trip Planning Mode
         System.out.println("You are now in Trip-Planning Mode. Type 'exit' if you want to exit this mode.");
         System.out.println("enter the names of 5 cities that you are going travel to within 3 days ");
-        ArrayList<String> locations = get5CitiesFromUser(scanner);
-        LocalDate startDate = getStartDateFromUser(scanner,locations);
+        ArrayList<String> locations = get5CitiesFromUser(scanner);      //hold the 5 cities that the user will travel to
+        LocalDate startDate = getStartDateFromUser(scanner,locations);      //gets a valid start date from user
         System.out.println("ok so the start date is :"+startDate.toString());
         System.out.println("So the weather at those places for the trip is:");
-        ArrayList<WeatherForecast> tripForecast = EasyWeather.getTripForecast(locations,startDate);
+        ArrayList<WeatherForecast> tripForecast = EasyWeather.getTripForecast(locations,startDate);         //gets the required forecasts
         for(int i = 0 ; i < 5 ; i++){
             System.out.print(capitaliseFirst(locations.get(i))+": ");
             System.out.println(tripForecast.get(i));

@@ -5,8 +5,10 @@ import com.github.prominence.openweathermap.api.model.forecast.WeatherForecast;
 import com.github.prominence.openweathermap.api.model.weather.Weather;
 import org.junit.jupiter.api.Test;
 
+import java.sql.Array;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -284,5 +286,20 @@ class EasyWeatherTest {
             assertTrue(forecast.getForecastTime().getHour() == 10 || forecast.getForecastTime().getHour() == 19);
         }
     }
+
+    @Test
+    public void testTripForecast(){
+        ArrayList<WeatherForecast> tripForecasts = new ArrayList<WeatherForecast>();
+        ArrayList<String> locations = new ArrayList<String>(Arrays.asList("dublin","nonsense","nonsense","dublin","Los Angeles"));
+        LocalDate startDate = LocalDate.now().plusDays(1);
+        tripForecasts= EasyWeather.getTripForecast(locations,startDate);
+        assertTrue(tripForecasts.get(0) != null);
+        assertTrue(tripForecasts.get(1) == null);
+        assertTrue(tripForecasts.get(2) == null);
+        assertTrue(tripForecasts.get(3) != null);
+        assertTrue(tripForecasts.get(4) != null);
+    }
+
+
 
 }

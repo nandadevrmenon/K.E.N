@@ -47,6 +47,7 @@ public class EasyOpenAI {
         addMessage("user",  "Give me only city tokens in the text '"+message+"'");      //gets chatgpt to return only city tokens from user input text
         NLPSend();
         String output = Receive();
+        System.out.println(output);
         if(output.contains("null")) {     //the API will return 'null' if there was no location token in the input
             System.out.println("Sorry I didn't catch a location in your input. Please try again.");
             return null;
@@ -57,9 +58,12 @@ public class EasyOpenAI {
         }
         messages.clear();
         if(output.contains("dublin")){
-            System.out.println(output);
             return "dublin,ie";
         }
+        if(output.contains("rome")){
+            return "rome,IT";
+        }
+
         return output;
     }
 
@@ -98,14 +102,27 @@ public class EasyOpenAI {
         httpPost.setEntity(entity);
     }
 
-    private void ItinerarySend() { // Send request to API
+    private void NormalSend() { // Send request to API
 
         requestBody.put("model", "gpt-3.5-turbo");
         requestBody.put("max_tokens", 1000);
         requestBody.put("messages", messages); // Send messages
+        requestBody.put("temperature", 0.5); // Set temperature to 0.1 // makes AI more predictable
+        requestBody.put("top_p", 0.5); // Set top_p to 0.1      //makes AI more likely to give the same answer every time.
 
         StringEntity entity = new StringEntity(requestBody.toString());
         httpPost.setEntity(entity);
+    }
+
+    private String getClothRecommendations(String weather){
+        addMessage("system","I am a chatbot that tells users what kind of clothes to weather for ceratin weather conditions." +
+                "`My answers are limited to 50 words."); // gaslight the bot into thinking it's an NLP that returns location tokens
+
+        addMessage("user",  "What should I wear if the weather is as follows :'"+weather+"'");   //gets chatgpt to make recommedations on what clothes to wear.
+        NLPSend();
+        String recommendation = Receive();
+        messages.clear();
+        return recommendation;
     }
 
     private String Receive() {

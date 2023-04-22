@@ -164,7 +164,7 @@ public class EasyWeather {
     }
 
 
-    public static ArrayList<WeatherForecast> getThreeDayForecast(String city,LocalDate startDate){
+    public static ArrayList<WeatherForecast> getThreeDayForecast(String city,LocalDate startDate) throws IllegalArgumentException{
         Forecast fiveDaysWeather;
         try{
             fiveDaysWeather = weatherClient
@@ -176,10 +176,7 @@ public class EasyWeather {
                     .retrieve()
                     .asJava();      //returns 5 day forecast with 3 hour diff in each timestamp
         }catch(NoDataFoundException ndfe){
-            if(ndfe.getMessage().contains("Data for provided parameters wasn't found")){
                 throw new IllegalArgumentException("The location entered might not be a valid location.");
-            }
-            else return null;
         }
 
         //we extract 3day forecast for only 9am and 6pm of each day
@@ -261,6 +258,16 @@ public class EasyWeather {
 
         return tripForecasts;
     }
+
+    private static void cooldown(){
+        try {
+            Thread.sleep((long)500);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
 
 
 
