@@ -107,60 +107,6 @@ public class EasyWeather {
         return rain.getOneHourLevel();
     }
 
-    public static ArrayList<Double> getThreeDayTempStarting(LocalDate startDate, String city){
-        LocalDate now = LocalDate.now();
-        if(startDate.isAfter(now.plusDays(2)) || (startDate.isBefore(now))){
-            throw new IllegalArgumentException("The trip has to end before 5 days from now.");
-        }
-        ArrayList<Double> temperatures = new ArrayList<Double>();
-        ArrayList<WeatherForecast> threeDayForecast= getThreeDayForecast(city,startDate);
-        for(int i = 0;i<threeDayForecast.size();i++){
-            temperatures.add(threeDayForecast.get(i).getTemperature().getValue());
-        }
-
-
-        return temperatures;
-    }
-
-    public static ArrayList<Double> getThreeDayHumidityStarting(LocalDate startDate, String city){
-        LocalDate now = LocalDate.now();
-        if(startDate.isAfter(now.plusDays(2)) || (startDate.isBefore(now))){
-            throw new IllegalArgumentException("The trip has to end before 5 days from now.");
-        }
-        ArrayList<Double> humidities = new ArrayList<Double>();
-        ArrayList<WeatherForecast> threeDayForecast= getThreeDayForecast(city,startDate);
-        for(int i = 0;i<threeDayForecast.size();i++){
-            humidities.add((double)threeDayForecast.get(i).getHumidity().getValue());
-        }
-        return humidities;
-    }
-
-    public static ArrayList<Double> getThreeDayWindStarting(LocalDate startDate, String city){
-        LocalDate now = LocalDate.now();
-        if(startDate.isAfter(now.plusDays(2)) || (startDate.isBefore(now))){
-            throw new IllegalArgumentException("The trip has to end before 5 days from now.");
-        }
-        ArrayList<Double> winds = new ArrayList<Double>();
-        ArrayList<WeatherForecast> threeDayForecast= getThreeDayForecast(city,startDate);
-        for(int i = 0;i<threeDayForecast.size();i++){
-            winds.add((double)threeDayForecast.get(i).getWind().getSpeed());
-        }
-        return winds;
-    }
-
-    public static ArrayList<Double> getThreeDayCloudStarting(LocalDate startDate, String city){
-        LocalDate now = LocalDate.now();
-        if(startDate.isAfter(now.plusDays(2)) || (startDate.isBefore(now))){
-            throw new IllegalArgumentException("The trip has to end before 5 days from now.");
-        }
-        ArrayList<Double> cloudcovers = new ArrayList<Double>();
-        ArrayList<WeatherForecast> threeDayForecast= getThreeDayForecast(city,startDate);
-        for(int i = 0;i<threeDayForecast.size();i++){
-            cloudcovers.add((double)threeDayForecast.get(i).getClouds().getValue());
-        }
-        return cloudcovers;
-    }
-
 
     public static ArrayList<WeatherForecast> getThreeDayForecast(String city,LocalDate startDate) throws IllegalArgumentException{
         Forecast fiveDaysWeather;
