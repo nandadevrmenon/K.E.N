@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class EasyWeather {
-    private static OpenWeatherMapClient weatherClient = OpenWeatherAPI_Singleton.getInstance();
+    private final static OpenWeatherMapClient weatherClient = OpenWeatherAPI_Singleton.getInstance();
     public static Weather getWeatherByCity(String city) throws IllegalArgumentException{
         Weather weather;
         try{
@@ -44,8 +44,8 @@ public class EasyWeather {
             return -301;            //-301 as a no data found error code
         }
 
-        double temp = weather.getTemperature().getValue();
-            return temp;
+        return weather.getTemperature().getValue();
+
     }
 
     public static double getHumidityByCity(String city){
@@ -59,8 +59,7 @@ public class EasyWeather {
             return -301;            //-301 as a no data found error code
         }
 
-        double humidity = weather.getHumidity().getValue();
-        return humidity;
+        return weather.getHumidity().getValue();
     }
     public static double getWindByCity(String city){
         Weather weather;
@@ -73,8 +72,8 @@ public class EasyWeather {
             return -301;            //-301 as a no data found error code
         }
 
-        double wind = weather.getWind().getSpeed();
-        return wind;
+        return  weather.getWind().getSpeed();
+
     }
 
     public static double getCloudByCity(String city){
@@ -88,8 +87,7 @@ public class EasyWeather {
             return -301;            //-301 as a no data found error code
         }
 
-        double cloud = weather.getClouds().getValue();
-        return cloud;
+        return weather.getClouds().getValue();
     }
 
     public static double getRainByCity(String city){
@@ -262,6 +260,8 @@ public class EasyWeather {
 
         return tripForecasts;
     }
+
+
 
     private static void cooldown(){
         try {
