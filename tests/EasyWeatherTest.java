@@ -1,12 +1,16 @@
 import com.github.prominence.openweathermap.api.OpenWeatherMapClient;
 import com.github.prominence.openweathermap.api.enums.Language;
 import com.github.prominence.openweathermap.api.enums.UnitSystem;
+import com.github.prominence.openweathermap.api.model.Clouds;
+import com.github.prominence.openweathermap.api.model.WeatherState;
 import com.github.prominence.openweathermap.api.model.forecast.WeatherForecast;
 import com.github.prominence.openweathermap.api.model.weather.Weather;
 import org.junit.jupiter.api.Test;
 
+import java.sql.Array;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -177,97 +181,6 @@ class EasyWeatherTest {
         }
     }
 
-    //TESTING THE 3 DAY FORECASTS
-    //INVALID DATE 3 DAY TEMP
-    @Test
-    void testGetThreeDayTempStartingInvalid(){
-        EasyWeather easyWeather = new EasyWeather();
-        String city = "Dublin,ie";
-        //invalid date
-        LocalDate date = LocalDate.of(2020, 1, 1);
-      //check for illegalArgumentException
-        assertThrows(IllegalArgumentException.class, () -> easyWeather.getThreeDayTempStarting(date, city));
-    }
-    //valid date
-    @Test
-    void testGetThreeDayTempStartingValid(){
-            EasyWeather easyWeather = new EasyWeather();
-            String city = "Dublin,ie";
-
-            LocalDate startDate = LocalDate.now().plusDays(1);
-            ArrayList<Double> temperatures = easyWeather.getThreeDayTempStarting(startDate, city);
-            assertNotNull(temperatures);
-            assertTrue(temperatures.size()>=5);//size can be 5 if the forecast starts 3 days from now
-
-
-    }
-
-    @Test
-    void testGetThreeDayHumidityStartingInvalid(){
-        EasyWeather easyWeather = new EasyWeather();
-        String city = "Dublin,ie";
-        //invalid date
-        LocalDate date = LocalDate.of(2020, 1, 1);
-        //check for illegalArgumentException
-        assertThrows(IllegalArgumentException.class, () -> easyWeather.getThreeDayHumidityStarting(date, city));
-    }
-
-    @Test
-    void testGetThreeDayHumidityStartingValid(){
-        EasyWeather easyWeather = new EasyWeather();
-        String city = "Dublin,ie";
-
-        LocalDate startDate = LocalDate.now().plusDays(1);
-        ArrayList<Double> humidities = easyWeather.getThreeDayHumidityStarting(startDate, city);
-        assertNotNull(humidities);
-        assertTrue(humidities.size()>=5);//size can be 5 if the forecast starts 3 days from now
-
-    }
-
-    @Test
-    void testGetThreeDayWindStartingInvalid(){
-        EasyWeather easyWeather = new EasyWeather();
-        String city = "Dublin,ie";
-        //invalid date
-        LocalDate date = LocalDate.of(2020, 1, 1);
-        //check for illegalArgumentException
-        assertThrows(IllegalArgumentException.class, () -> easyWeather.getThreeDayWindStarting(date, city));
-    }
-
-    @Test
-    void testGetThreeDayWindStartingValid(){
-        EasyWeather easyWeather = new EasyWeather();
-        String city = "Dublin,ie";
-
-        LocalDate startDate = LocalDate.now().plusDays(1);
-        ArrayList<Double> winds = easyWeather.getThreeDayWindStarting(startDate, city);
-        assertNotNull(winds);
-        assertTrue(winds.size()>=5);//size can be 5 if the forecast starts 3 days from now
-
-    }
-
-    @Test
-    void testGetThreeDayCloudStartingInvalid(){
-        EasyWeather easyWeather = new EasyWeather();
-        String city = "Dublin,ie";
-        //invalid date
-        LocalDate date = LocalDate.of(2020, 1, 1);
-        //check for illegalArgumentException
-        assertThrows(IllegalArgumentException.class, () -> easyWeather.getThreeDayCloudStarting(date, city));
-    }
-
-    @Test
-    void testGetThreeDayCloudStartingValid(){
-        EasyWeather easyWeather = new EasyWeather();
-        String city = "Dublin,ie";
-
-        LocalDate startDate = LocalDate.now().plusDays(1);
-        ArrayList<Double> clouds = easyWeather.getThreeDayCloudStarting(startDate, city);
-        assertNotNull(clouds);
-        assertTrue(clouds.size()>=5);//size can be 5 if the forecast starts 3 days from now
-
-    }
-
     @Test
     public void testThreeDayForecast() {
         EasyWeather easyWeather = new EasyWeather();
@@ -284,5 +197,41 @@ class EasyWeatherTest {
             assertTrue(forecast.getForecastTime().getHour() == 10 || forecast.getForecastTime().getHour() == 19);
         }
     }
+
+    @Test
+    public void testTripForecast(){
+        ArrayList<WeatherForecast> tripForecasts = new ArrayList<WeatherForecast>();
+        ArrayList<String> locations = new ArrayList<String>(Arrays.asList("dublin","nonsense","nonsense","dublin","Los Angeles"));
+        LocalDate startDate = LocalDate.now().plusDays(1);
+        tripForecasts= EasyWeather.getTripForecast(locations,startDate);
+        assertTrue(tripForecasts.get(0) != null);
+        assertTrue(tripForecasts.get(1) == null);
+        assertTrue(tripForecasts.get(2) == null);
+        assertTrue(tripForecasts.get(3) != null);
+        assertTrue(tripForecasts.get(4) != null);
+    }
+
+@Test
+    public void testGetPrettyForecast(){
+        ArrayList<WeatherForecast> forecast = EasyWeather.getTripForecast(new ArrayList<String>(Arrays.asList("nagaland","kuching","los angeles","askjdas","Lagos")),LocalDate.now());//sample locations
+
+
+        String location ="Kuching";
+        WeatherForecast fc = forecast.get(1);       //points to kuching
+        String weather = "Location: "+location +", Weather State: "+fc.getWeatherState().getName()+"("+fc.getWeatherState().getDescription()+"), ";
+        weather = weather + "Temperature: "+fc.getTemperature().getValue()+" " +fc.getTemperature().getUnit()+", "+fc.getClouds().toString()+", Wind:"+fc.getWind().getSpeed()+" "+fc.getWind().getUnit()+", ";     //we make the string we are supposed to get
+        if(fc.getRain()!=null){     //if rain info exists add it to the string
+        weather=weather+fc.getRain().toString();
+        }
+        assertTrue( EasyWeather.getPrettyForecast(fc,location).equals(weather));        //assert that what we get is equal to the above string
+
+            //test for non existent location
+        fc=forecast.get(3);
+        location ="rubbish";
+        weather = "Location: "+location+", Sorry I do not have data for that location. Maybe it is misspelled?";
+        assertTrue(EasyWeather.getPrettyForecast(fc,location).equals(weather));
+}
+
+
 
 }
