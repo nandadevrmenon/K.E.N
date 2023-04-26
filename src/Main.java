@@ -18,22 +18,18 @@ public class Main {
     public static void main(String[] args) throws IOException, ParseException {
         System.out.println("Hi, I'm WeatherBot. I can help you with all your weather needs.\n" +
                 "I can understand you better if you type in full sentences.");
-
-        ArrayList<WeatherForecast> fc = EasyWeather.getTripForecast(new ArrayList<String>(Arrays.asList("nagaland","mumbai","los angeles","askjdas","Lagos")),LocalDate.now());
-        System.out.println(fc);
-        System.out.println(EasyWeather.getPrettyForecast(fc.get(0),"Nagaland"));
-//        String mode = null;
-//        Scanner scanner = new Scanner(System.in);
-//        do {
-//            mode = askUserAboutMode(scanner);
-//            if (mode == null) break;
-//            if (mode.equals("current")) {
-//                askForCity(scanner);
-//            }
-//            if (mode.equals("trip")) {
-//                getWeatherForTrip(scanner);
-//            }
-//        } while (mode != null);
+        String mode = null;
+        Scanner scanner = new Scanner(System.in);
+        do {
+            mode = askUserAboutMode(scanner);
+            if (mode == null) break;
+            if (mode.equals("current")) {
+                askForCity(scanner);
+            }
+            if (mode.equals("trip")) {
+                getWeatherForTrip(scanner);
+            }
+        } while (mode != null);
 
 
 
