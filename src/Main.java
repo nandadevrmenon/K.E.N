@@ -7,11 +7,10 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.*;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 
 public class Main {
     public static void main(String[] args) throws IOException, ParseException {
@@ -222,42 +221,70 @@ public class Main {
     }
 
     public static String getWeatherSpecifics(Scanner scanner){
-        String specifics = null;
+        String specifics = new  String();
         System.out.println("What weather specifics do you want to know about?(Accepted inputs: temperature, humidity, wind, pressure, clouds, rain, snow, weather description)");
-        while(scanner.hasNext()){
-            String input = scanner.nextLine().toLowerCase().trim();
-            if(input.isEmpty()) continue;
-            if(input.contains("temperature") || input.contains("temp")|| input.contains("cold") || input.contains("hot")|| input.contains("warm")|| input.contains("chilly")|| input.contains("freezing")|| input.contains("feel")){
-                specifics = "temperature";
-                break;
-            }
-            else if(input.contains("humidity")|| input.contains("humid")|| input.contains("moist")||  input.contains("humid")){
-                specifics = "humidity";
-                break;
-            }
-            else if(input.contains("wind")|| input.contains("blowing")|| input.contains("breeze")|| input.contains("blow")|| input.contains("gust")){
-                specifics = "wind";
-                break;
-            }
-            else if(input.contains("clouds")|| input.contains("cloudy")|| input.contains("cloud")|| input.contains("overcast")|| input.contains("clear")|| input.contains("sun")|| input.contains("sky")|| input.contains("skies")|| input.contains("blue")|| input.contains("grey")|| input.contains("gray")|| input.contains("white")|| input.contains("black")|| input.contains("dark")|| input.contains("light")|| input.contains("bright")|| input.contains("dull")|| input.contains("dim")||  input.contains("gloom")|| input.contains("sun")){
-                specifics = "clouds";
-                break;
-            }
-            else if(input.contains("rain")|| input.contains("precipitation")|| input.contains("wet")|| input.contains("drizzle")|| input.contains("pour")|| input.contains("precipitation")|| input.contains("precipitate")){
-                specifics = "rain";
-                break;
-            }
+        HashMap<String, String[]> specificsMap = new HashMap<String, String[]>();
+        specificsMap.put("temperature",new String[]{"temperature","temp","cold","hot","warm","chilly","freezing","feel"});
+        specificsMap.put("humidity",new String[]{"humidity","humid","moist","humid"});
+        specificsMap.put("wind",new String[]{"wind","blowing","breeze","blow","gust"});
+        specificsMap.put("pressure",new String[]{"pressure","atmosphere","air","pressure"});
+        specificsMap.put("clouds",new String[]{"clouds","cloudy","cloud","overcast","clear","sun","sky","skies","blue","grey","gray","white","black","dark","light","bright","sunshine","sunlight","sunshine","dull","gloomy","gloom","gloomy","gloominess","gloom"});
+        specificsMap.put("rain",new String[]{"rain","rainy","raining","rainfall","rainfall","precipitation","precipitate","drizzle","drizzling","pouring","pour","downpour","downpouring","downfall","downfalling","downfall","downfalling","shower"});
+        specificsMap.put("all",new String[]{"weather description","all","everything"});
 
-            else if(input.contains("weather description")||input.contains("all")||input.contains("everything")){
-                specifics = "all";
+        Function<String, String> findKeyByValue = valueToFind -> specificsMap.entrySet().stream()
+                .filter(entry -> Arrays.asList(entry.getValue()).contains(valueToFind))
+                .map(Map.Entry::getKey)
+                .findFirst()
+                .orElse(null);
+        while (scanner.hasNext()){
+
+            String input = scanner.nextLine().toLowerCase().trim();
+            String key = findKeyByValue.apply(input);
+            if(key != null){
+                specifics = key;
                 break;
             }
             else{
-                System.out.println("I didn't catch that. Please try again.");
+                System.out.println("I am sorry. I don't understand what you mean. Please try to be clearer.");
             }
-
-
         }
+
+//        while(scanner.hasNext()){
+//            String input = scanner.nextLine().toLowerCase().trim();
+//            if(input.isEmpty()) continue;
+//
+//            if(specificsMap.containsValue(input)){
+//                specifics = "temperature";
+//                break;
+//            }
+//            else if(specificsMap.containsKey(input)){
+//                specifics = "humidity";
+//                break;
+//            }
+//            else if(specificsMap.containsKey(input)){
+//                specifics = "wind";
+//                break;
+//            }
+//            else if(specificsMap.containsKey(input)){
+//                specifics = "clouds";
+//                break;
+//            }
+//            else if(specificsMap.containsKey(input)){
+//                specifics = "rain";
+//                break;
+//            }
+//
+//            else if(specificsMap.containsKey(input)){
+//                specifics = "all";
+//                break;
+//            }
+//            else{
+//                System.out.println("I didn't catch that. Please try again.");
+//            }
+//
+//
+//        }
 
         return specifics;}
 }

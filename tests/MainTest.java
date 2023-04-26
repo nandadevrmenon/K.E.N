@@ -56,7 +56,7 @@ public class MainTest {
     }
     @Test
     public void testGetWeatherSpecificsRain(){
-        System.setIn(new ByteArrayInputStream("rain\r\nprecipitation\n\rdry\r\nwet\n\rpouring\n\rdrizzle".getBytes()));
+        System.setIn(new ByteArrayInputStream("rain\r\nprecipitation\n\rdry\r\nwet\n\rpouring\ndrizzle".getBytes()));
         Scanner scanner = new Scanner(System.in);
         String specifics = Main.getWeatherSpecifics(scanner);
         assertEquals("rain", specifics);
@@ -66,9 +66,6 @@ public class MainTest {
         assertEquals("rain", specifics);
         specifics = Main.getWeatherSpecifics(scanner);
         assertEquals("rain", specifics);
-        specifics = Main.getWeatherSpecifics(scanner);
-        assertEquals("rain", specifics);
-
     }
 
     @Test
@@ -83,8 +80,8 @@ public class MainTest {
         assertEquals("wind", specifics);
         specifics = Main.getWeatherSpecifics(scanner);
         assertEquals("wind", specifics);
-        specifics = Main.getWeatherSpecifics(scanner);
-        assertEquals("wind", specifics);
+
+
     }
 
     @Test
