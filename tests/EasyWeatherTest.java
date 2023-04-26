@@ -213,18 +213,22 @@ class EasyWeatherTest {
 
 @Test
     public void testGetPrettyForecast(){
-        ArrayList<WeatherForecast> forecast = EasyWeather.getTripForecast(new ArrayList<String>(Arrays.asList("nagaland","kuching","los angeles","askjdas","Lagos")),LocalDate.now());
+        ArrayList<WeatherForecast> forecast = EasyWeather.getTripForecast(new ArrayList<String>(Arrays.asList("nagaland","kuching","los angeles","askjdas","Lagos")),LocalDate.now());//sample locations
+
+
         String location ="Kuching";
-        WeatherForecast fc = forecast.get(1);
+        WeatherForecast fc = forecast.get(1);       //points to kuching
         String weather = "Location: "+location +", Weather State: "+fc.getWeatherState().getName()+"("+fc.getWeatherState().getDescription()+"), ";
-        weather = weather + "Temperature: "+fc.getTemperature().getValue()+" " +fc.getTemperature().getUnit()+", "+fc.getClouds().toString()+", Wind:"+fc.getWind().getSpeed()+" "+fc.getWind().getUnit()+", ";
-        if(fc.getRain()!=null){
+        weather = weather + "Temperature: "+fc.getTemperature().getValue()+" " +fc.getTemperature().getUnit()+", "+fc.getClouds().toString()+", Wind:"+fc.getWind().getSpeed()+" "+fc.getWind().getUnit()+", ";     //we make the string we are supposed to get
+        if(fc.getRain()!=null){     //if rain info exists add it to the string
         weather=weather+fc.getRain().toString();
         }
-        assertTrue( EasyWeather.getPrettyForecast(fc,location).equals(weather));
+        assertTrue( EasyWeather.getPrettyForecast(fc,location).equals(weather));        //assert that what we get is equal to the above string
 
+            //test for non existent location
+        fc=forecast.get(3);
         location ="rubbish";
-         weather = "Sorry I do not have data for that location. Maybe it is misspelled?";
+        weather = "Sorry I do not have data for that location. Maybe it is misspelled?";
         assertTrue(EasyWeather.getPrettyForecast(fc,location).equals(weather));
 }
 
