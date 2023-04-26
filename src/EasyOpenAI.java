@@ -6,12 +6,14 @@ import org.apache.hc.core5.http.HttpEntity;
 import org.apache.hc.core5.http.ParseException;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.http.io.entity.StringEntity;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Stack;
+import java.util.StringJoiner;
 
 public class EasyOpenAI {
     private static final String API_TOKEN = "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";
@@ -46,7 +48,6 @@ public class EasyOpenAI {
         addMessage("user",  "Give me only city tokens in the text '"+message+"'");      //gets chatgpt to return only city tokens from user input text
         NLPSend();
         String output = Receive();
-        System.out.println(output);
         if(output.contains("null")) {     //the API will return 'null' if there was no location token in the input
             System.out.println("Sorry I didn't catch a location in your input. Please try again.");
             return null;
@@ -90,14 +91,27 @@ public class EasyOpenAI {
     }
 
     public String getClothRecommendations(String weather){
-        addMessage("system","I am a chatbot that tells users what kind of clothes to weather for certain weather conditions." + "My answers are limited to 50 words."); // gaslight the bot into thinking it's an NLP that returns location tokens
+        addMessage("system","I am a chatbot that tells users what kind of clothes to weather for certain weather conditions." + "My answers are about 60 words long."); // gaslight the bot into thinking it's an NLP that returns location tokens
         weather = weather.replace("°"," degrees ");
-        System.out.println(weather);
+        if(weather.contains("Sorry I do not have data for that location. Maybe it is misspelled?"))
+            return"Sorry, I can't recommend clothes for a null weather.";
         addMessage("user",  "What should I wear if the weather is as follows :'"+weather+"'.");   //gets chatgpt to make recommedations on what clothes to wear.
         NormalSend();
         String recommendation = Receive();
         messages.clear();
-        return recommendation;
+        StringJoiner stringJoiner = new StringJoiner("\n");
+        String [] tokens = recommendation.split(" ");
+        String str =tokens[0];
+        for(int  i = 1; i <tokens.length;i++){
+            str=str+" "+tokens[i];
+            if(i%15==0){
+                stringJoiner.add(str);
+                str="";
+            }
+        }
+        stringJoiner.add(str);
+        String wrappedText = stringJoiner.toString();
+        return wrappedText;
     }
 
     private void NLPSend() { // Send request to API
@@ -140,9 +154,15 @@ public class EasyOpenAI {
             throw new RuntimeException(e);
         }
 
-
+        String content = "";
         responseObject = new JSONObject(responseString);
-        String content = responseObject.getJSONArray("choices").getJSONObject(0).getJSONObject("message").getString("content");
+        try{
+             content = responseObject.getJSONArray("choices").getJSONObject(0).getJSONObject("message").getString("content");
+        }catch(JSONException je){
+            System.out.println("Please slow down. I can only handle a certain number of requests in a minute. Please wait for 20 seconds. ");
+            return "null";
+        }
+
         return content;
     }
 }

@@ -18,6 +18,7 @@ public class Main {
     public static void main(String[] args) throws IOException, ParseException {
         System.out.println("Hi, I'm WeatherBot. I can help you with all your weather needs.\n" +
                 "I can understand you better if you type in full sentences.");
+        System.out.println("Also you can type 'exit' to get out of the program.");
         String mode = null;
         Scanner scanner = new Scanner(System.in);
         do {
@@ -38,7 +39,6 @@ public class Main {
     public static String askUserAboutMode(Scanner scanner) {
         String mode = null;
         System.out.println("I have live weather mode and trip planning mode. Which mode would you like to select?");
-        System.out.println("Also you can type 'exit' to get out of the program.");
         while (scanner.hasNext()) {
             mode = scanner.nextLine().toLowerCase().trim();     //gets the trimmed and lowercase input
             if(mode.isEmpty()) continue;
@@ -184,6 +184,9 @@ public class Main {
                 }
                 return LocalDate.now().plusDays(1);
             }
+            else if (input.contains("day after")){
+                return LocalDate.now().plusDays(2);
+            }
             else if (validDate(input,formatter)) {
                 LocalDate startDate = LocalDate.parse(input, formatter);
                 if(startDate.isAfter(LocalDate.now().plusDays(2)) || (startDate.isBefore(LocalDate.now()))){
@@ -229,14 +232,17 @@ public class Main {
     public static void printClothRecommendations(ArrayList<String> messages,ArrayList<String> locations){
         EasyOpenAI openAI = new EasyOpenAI();
         for(int i = 0 ; i <messages.size();i++){
+            System.out.println();
             System.out.println("Getting cloth recommendations for : "+locations.get(i)+". Please Wait...");
-            System.out.println(openAI.getClothRecommendations(messages.get(i)));
-
+            System.out.println();
             try {
-                Thread.sleep(10000);
+                Thread.sleep(20000);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
+
+            System.out.println(openAI.getClothRecommendations(messages.get(i)));
+
         }
 
     }
