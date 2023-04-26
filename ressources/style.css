@@ -7,21 +7,41 @@ rgba(52, 53, 65);
     -fx-background-color: rgba(52,53,65);
 }
 
-/* Set the text color of the TextArea to white */
-.text-area {
-    -fx-text-fill: white;
-}
-
 .answer-area {
     -fx-background-color: rgba(50,50,60);
 }
 
+.text-area {
+    text-area-background: rgba(50,50,60) ;
+}
+
+.text-area .content {
+    -fx-background-color: text-area-background;
+    -fx-highlight-text-fill: white;
+
+}
+
+.text-field {
+    -fx-background-color: rgba(50,50,60);
+}
+
+.text-field .content {
+    -fx-background-color: white;
+    -fx-highlight-text-fill: white;
+}
+
 /* Set the prompt text color of the TextField to gray */
 .text-field .text {
-    -fx-prompt-text-fill: gray;
+    -fx-prompt-text-fill: white;
 }
+
 
 /* Set the font color of the Text nodes to white */
 .text {
     -fx-fill: white;
+}
+
+.button {
+    -fx-background-color: rgba(50,50,60);
+    -fx-text-fill: white;
 }
