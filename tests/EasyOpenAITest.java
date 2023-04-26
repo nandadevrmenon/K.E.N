@@ -33,4 +33,9 @@ class EasyOpenAITest {
         output = openai.getAllCityTokens(input);
         assertTrue(output.equals(new ArrayList<String>(Arrays.asList("dublin,ie", "cork","swords","santry","tallaght"))));
     }
+
+
+    public void testGetClothRecommednations(){
+
+    }
 }

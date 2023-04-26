@@ -208,12 +208,12 @@ public class EasyWeather {
     }
 
     public static String getPrettyForecast(WeatherForecast fc,String location){
-
+        String str = "Location: "+location+", ";
         if(fc==null){
-            return "Sorry I do not have data for that location. Maybe it is misspelled?";
+            return str+"Sorry I do not have data for that location. Maybe it is misspelled?";
         }
 
-        String str = "Location: "+location+", ";
+
         str = str+"Weather State: "+fc.getWeatherState().getName()+"("+fc.getWeatherState().getDescription()+"), Temperature: "+fc.getTemperature().getValue()+" " +fc.getTemperature().getUnit()+", "+fc.getClouds().toString()+", Wind:"+fc.getWind().getSpeed()+" "+fc.getWind().getUnit()+", ";
         if(fc.getRain()!=null){
             str=str+fc.getRain().toString();

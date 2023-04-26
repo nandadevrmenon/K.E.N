@@ -107,10 +107,7 @@ public class Main {
         System.out.println("ok so the start date is :"+startDate.toString());
         System.out.println("So the weather at those places for the trip is:");
         ArrayList<WeatherForecast> tripForecast = EasyWeather.getTripForecast(locations,startDate);         //gets the required forecasts
-        for(int i = 0 ; i < 5 ; i++){
-            System.out.print(capitaliseFirst(locations.get(i))+": ");
-            System.out.println(tripForecast.get(i));
-        }
+        printPrettyForecasts(tripForecast,locations);
 
     }
 
@@ -216,6 +213,12 @@ public class Main {
     public static String capitaliseFirst(String str){
         String result = str.substring(0,1).toUpperCase();
         return result+str.substring(1);
+    }
+
+    public static void printPrettyForecasts(ArrayList<WeatherForecast> fcs,ArrayList<String> locations){
+        for (int i = 0 ; i <fcs.size();i++){
+            System.out.println(EasyWeather.getPrettyForecast(fcs.get(i),locations.get(i)));
+        }
     }
 }
 

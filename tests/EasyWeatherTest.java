@@ -228,7 +228,7 @@ class EasyWeatherTest {
             //test for non existent location
         fc=forecast.get(3);
         location ="rubbish";
-        weather = "Sorry I do not have data for that location. Maybe it is misspelled?";
+        weather = "Location: "+location+", Sorry I do not have data for that location. Maybe it is misspelled?";
         assertTrue(EasyWeather.getPrettyForecast(fc,location).equals(weather));
 }
 
