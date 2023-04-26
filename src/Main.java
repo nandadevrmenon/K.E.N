@@ -2,6 +2,8 @@
 import com.github.prominence.openweathermap.api.model.forecast.WeatherForecast;
 import com.github.prominence.openweathermap.api.model.weather.Weather;
 import org.apache.hc.core5.http.ParseException;
+
+import java.awt.image.AreaAveragingScaleFilter;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -18,18 +20,20 @@ public class Main {
     public static void main(String[] args) throws IOException, ParseException {
         System.out.println("Hi, I'm WeatherBot. I can help you with all your weather needs.\n" +
                 "I can understand you better if you type in full sentences.");
-        String mode = null;
-        Scanner scanner = new Scanner(System.in);
-        do {
-            mode = askUserAboutMode(scanner);
-            if (mode == null) break;
-            if (mode.equals("current")) {
-                askForCity(scanner);
-            }
-            if (mode.equals("trip")) {
-                getWeatherForTrip(scanner);
-            }
-        } while (mode != null);
+        EasyOpenAI openAI = new EasyOpenAI();
+        openAI.getClothRecommendations("Location: kuching, Weather State: Rain(light rain), Temperature: 26.54 °C, Clouds: 100%, Wind:0.96 meter/sec, 3-hour rain level: 0.22 mm");
+//        String mode = null;
+//        Scanner scanner = new Scanner(System.in);
+//        do {
+//            mode = askUserAboutMode(scanner);
+//            if (mode == null) break;
+//            if (mode.equals("current")) {
+//                askForCity(scanner);
+//            }
+//            if (mode.equals("trip")) {
+//                getWeatherForTrip(scanner);
+//            }
+//        } while (mode != null);
 
 
 
@@ -107,7 +111,8 @@ public class Main {
         System.out.println("ok so the start date is :"+startDate.toString());
         System.out.println("So the weather at those places for the trip is:");
         ArrayList<WeatherForecast> tripForecast = EasyWeather.getTripForecast(locations,startDate);         //gets the required forecasts
-        printPrettyForecasts(tripForecast,locations);
+        ArrayList<String> prettyFCs =  getPrettyForecasts(tripForecast,locations);// gets and prints formatted weather forecasts
+        printClothRecommendations(prettyFCs);
 
     }
 
@@ -215,11 +220,22 @@ public class Main {
         return result+str.substring(1);
     }
 
-    public static void printPrettyForecasts(ArrayList<WeatherForecast> fcs,ArrayList<String> locations){
+    public static ArrayList<String> getPrettyForecasts(ArrayList<WeatherForecast> fcs,ArrayList<String> locations){
+        ArrayList<String> prettyFCs = new ArrayList<String>();
         for (int i = 0 ; i <fcs.size();i++){
-            System.out.println(EasyWeather.getPrettyForecast(fcs.get(i),locations.get(i)));
+            String prettyFC = EasyWeather.getPrettyForecast(fcs.get(i),locations.get(i));
+            prettyFCs.add(prettyFC);
+            System.out.println(prettyFC);
         }
+        return prettyFCs;
     }
+
+    public static void printClothRecommendations(ArrayList<String> messages){
+        EasyOpenAI openAI = new EasyOpenAI();
+        openAI.getClothRecommendations(messages.get(0));
+    }
+
+
 }
 
 

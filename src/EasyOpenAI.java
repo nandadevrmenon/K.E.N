@@ -89,6 +89,16 @@ public class EasyOpenAI {
         return tokenList;
     }
 
+    public String getClothRecommendations(String weather){
+        addMessage("system","I am a chatbot that tells users what kind of clothes to weather for certain weather conditions." + "My answers are limited to 50 words."); // gaslight the bot into thinking it's an NLP that returns location tokens
+        weather = weather.replace("°"," degrees ");
+        System.out.println(weather);
+        addMessage("user",  "What should I wear if the weather is as follows :'"+weather+"'.");   //gets chatgpt to make recommedations on what clothes to wear.
+        NormalSend();
+        String recommendation = Receive();
+        messages.clear();
+        return recommendation;
+    }
 
     private void NLPSend() { // Send request to API
 
@@ -113,16 +123,7 @@ public class EasyOpenAI {
         httpPost.setEntity(entity);
     }
 
-    private String getClothRecommendations(String weather){
-        addMessage("system","I am a chatbot that tells users what kind of clothes to weather for ceratin weather conditions." +
-                "`My answers are limited to 50 words."); // gaslight the bot into thinking it's an NLP that returns location tokens
 
-        addMessage("user",  "What should I wear if the weather is as follows :'"+weather+"'");   //gets chatgpt to make recommedations on what clothes to wear.
-        NLPSend();
-        String recommendation = Receive();
-        messages.clear();
-        return recommendation;
-    }
 
     private String Receive() {
         CloseableHttpResponse response = null;
@@ -139,7 +140,9 @@ public class EasyOpenAI {
             throw new RuntimeException(e);
         }
 
+
         responseObject = new JSONObject(responseString);
+        System.out.println(responseString);
         String content = responseObject.getJSONArray("choices").getJSONObject(0).getJSONObject("message").getString("content");
         return content;
     }
