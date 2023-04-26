@@ -222,8 +222,44 @@ public class Main {
     }
 
     public static String getWeatherSpecifics(Scanner scanner){
-        return "";
-    }
+        String specifics = null;
+        System.out.println("What weather specifics do you want to know about?(Accepted inputs: temperature, humidity, wind, pressure, clouds, rain, snow, weather description)");
+        while(scanner.hasNext()){
+            String input = scanner.nextLine().toLowerCase().trim();
+            if(input.isEmpty()) continue;
+            if(input.contains("temperature") || input.contains("temp")|| input.contains("cold") || input.contains("hot")|| input.contains("warm")|| input.contains("chilly")|| input.contains("freezing")|| input.contains("feel")){
+                specifics = "temperature";
+                break;
+            }
+            else if(input.contains("humidity")|| input.contains("humid")|| input.contains("moist")||  input.contains("humid")){
+                specifics = "humidity";
+                break;
+            }
+            else if(input.contains("wind")|| input.contains("blowing")|| input.contains("breeze")|| input.contains("blow")|| input.contains("gust")){
+                specifics = "wind";
+                break;
+            }
+            else if(input.contains("clouds")|| input.contains("cloudy")|| input.contains("cloud")|| input.contains("overcast")|| input.contains("clear")|| input.contains("sun")|| input.contains("sky")|| input.contains("skies")|| input.contains("blue")|| input.contains("grey")|| input.contains("gray")|| input.contains("white")|| input.contains("black")|| input.contains("dark")|| input.contains("light")|| input.contains("bright")|| input.contains("dull")|| input.contains("dim")||  input.contains("gloom")|| input.contains("sun")){
+                specifics = "clouds";
+                break;
+            }
+            else if(input.contains("rain")|| input.contains("precipitation")|| input.contains("wet")|| input.contains("drizzle")|| input.contains("pour")|| input.contains("precipitation")|| input.contains("precipitate")){
+                specifics = "rain";
+                break;
+            }
+
+            else if(input.contains("weather description")||input.contains("all")||input.contains("everything")){
+                specifics = "all";
+                break;
+            }
+            else{
+                System.out.println("I didn't catch that. Please try again.");
+            }
+
+
+        }
+
+        return specifics;}
 }
 
 

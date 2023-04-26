@@ -37,7 +37,7 @@ public class MainTest {
 
     @Test
     public void testGetWeatherSpecificsTemp(){
-        System.setIn(new ByteArrayInputStream("temp\r\ntemperature\ncold\nwarm\nhot\nchilly\nfeel".getBytes()));
+        System.setIn(new ByteArrayInputStream("temp\r\ntemperature\ncold\nwarm\nfreezing\nhot\nchilly\nfeel".getBytes()));
         Scanner scanner = new Scanner(System.in);
         String specifics = Main.getWeatherSpecifics(scanner);
         assertEquals("temperature", specifics);
@@ -56,7 +56,7 @@ public class MainTest {
     }
     @Test
     public void testGetWeatherSpecificsRain(){
-        System.setIn(new ByteArrayInputStream("rain\r\nprecipitation\r\nwet\n\rsnow\n\rpouring\nhail".getBytes()));
+        System.setIn(new ByteArrayInputStream("rain\r\nprecipitation\n\rdry\r\nwet\n\rpouring\n\rdrizzle".getBytes()));
         Scanner scanner = new Scanner(System.in);
         String specifics = Main.getWeatherSpecifics(scanner);
         assertEquals("rain", specifics);
@@ -68,15 +68,12 @@ public class MainTest {
         assertEquals("rain", specifics);
         specifics = Main.getWeatherSpecifics(scanner);
         assertEquals("rain", specifics);
-        specifics = Main.getWeatherSpecifics(scanner);
-        assertEquals("rain", specifics);
-        specifics = Main.getWeatherSpecifics(scanner);
-        assertEquals("rain", specifics);
+
     }
 
     @Test
     public void testGetWeatherSpecificsWind() {
-        System.setIn(new ByteArrayInputStream("wind\r\nblowing\n\rstrong\n\rstormy\n\rwindy\n\rwind".getBytes()));
+        System.setIn(new ByteArrayInputStream("wind\n\rblowing\nstrong\nwindy\nwind\nbreeze".getBytes()));
         Scanner scanner = new Scanner(System.in);
         String specifics = Main.getWeatherSpecifics(scanner);
         assertEquals("wind", specifics);
@@ -89,11 +86,35 @@ public class MainTest {
         specifics = Main.getWeatherSpecifics(scanner);
         assertEquals("wind", specifics);
     }
+
     @Test
-    public void testGetWeatherSpecificsClouds() {
-        System.setIn(new ByteArrayInputStream("clouds\r\nclear\n\rcloudy\n\rclouds\n\rpartly cloudy\n\rpartly sunny\n\rpartly cloudy".getBytes()));
+    public void testGetWeatherSpecificsAll(){
+        System.setIn(new ByteArrayInputStream("all\r\nweather description\neverything\nall\n".getBytes()));
         Scanner scanner = new Scanner(System.in);
         String specifics = Main.getWeatherSpecifics(scanner);
+        assertEquals("all", specifics);
+        specifics = Main.getWeatherSpecifics(scanner);
+        assertEquals("all", specifics);
+        specifics = Main.getWeatherSpecifics(scanner);
+        assertEquals("all", specifics);
+        specifics = Main.getWeatherSpecifics(scanner);
+        assertEquals("all", specifics);
+
+    }
+
+    @Test
+    public void testGetWeatherSpecificsClouds() {
+        System.setIn(new ByteArrayInputStream("clouds\r\nclear\n\rcloudy\n\rclouds\n\rpartly cloudy\n\rpartly sunny\n\rpartly cloudy\n\rovercast\n\rsun\n\rskylight\n\rblue\n\rgrey\n\rgray\n\rwhite\n\rlight\n\rbright\n\rdull\n\rdim\n\rgloom".getBytes()));
+        Scanner scanner = new Scanner(System.in);
+        String specifics = Main.getWeatherSpecifics(scanner);
+        assertEquals("clouds", specifics);
+        specifics = Main.getWeatherSpecifics(scanner);
+        assertEquals("clouds", specifics);
+        specifics = Main.getWeatherSpecifics(scanner);
+        assertEquals("clouds", specifics);
+        specifics = Main.getWeatherSpecifics(scanner);
+        assertEquals("clouds", specifics);
+        specifics = Main.getWeatherSpecifics(scanner);
         assertEquals("clouds", specifics);
         specifics = Main.getWeatherSpecifics(scanner);
         assertEquals("clouds", specifics);
@@ -108,11 +129,9 @@ public class MainTest {
     }
     @Test
     public void testGetWeatherSpecificsHumidity() {
-        System.setIn(new ByteArrayInputStream("humidity\r\nhumid\n\rmoist\n\rwet\n\rwet".getBytes()));
+        System.setIn(new ByteArrayInputStream("humidity\r\nhumid\n\rmoist".getBytes()));
         Scanner scanner = new Scanner(System.in);
         String specifics = Main.getWeatherSpecifics(scanner);
-        assertEquals("humidity", specifics);
-        specifics = Main.getWeatherSpecifics(scanner);
         assertEquals("humidity", specifics);
         specifics = Main.getWeatherSpecifics(scanner);
         assertEquals("humidity", specifics);
