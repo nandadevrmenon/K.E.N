@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class EasyWeather {
-    private static OpenWeatherMapClient weatherClient = OpenWeatherAPI_Singleton.getInstance();
+    private final static OpenWeatherMapClient weatherClient = OpenWeatherAPI_Singleton.getInstance();
     public static Weather getWeatherByCity(String city) throws IllegalArgumentException{
         Weather weather;
         try{
@@ -44,8 +44,8 @@ public class EasyWeather {
             return -301;            //-301 as a no data found error code
         }
 
-        double temp = weather.getTemperature().getValue();
-            return temp;
+        return weather.getTemperature().getValue();
+
     }
 
     public static double getHumidityByCity(String city){
@@ -59,8 +59,7 @@ public class EasyWeather {
             return -301;            //-301 as a no data found error code
         }
 
-        double humidity = weather.getHumidity().getValue();
-        return humidity;
+        return weather.getHumidity().getValue();
     }
     public static double getWindByCity(String city){
         Weather weather;
@@ -73,8 +72,8 @@ public class EasyWeather {
             return -301;            //-301 as a no data found error code
         }
 
-        double wind = weather.getWind().getSpeed();
-        return wind;
+        return  weather.getWind().getSpeed();
+
     }
 
     public static double getCloudByCity(String city){
@@ -88,8 +87,7 @@ public class EasyWeather {
             return -301;            //-301 as a no data found error code
         }
 
-        double cloud = weather.getClouds().getValue();
-        return cloud;
+        return weather.getClouds().getValue();
     }
 
     public static double getRainByCity(String city){
@@ -109,62 +107,8 @@ public class EasyWeather {
         return rain.getOneHourLevel();
     }
 
-    public static ArrayList<Double> getThreeDayTempStarting(LocalDate startDate, String city){
-        LocalDate now = LocalDate.now();
-        if(startDate.isAfter(now.plusDays(2)) || (startDate.isBefore(now))){
-            throw new IllegalArgumentException("The trip has to end before 5 days from now.");
-        }
-        ArrayList<Double> temperatures = new ArrayList<Double>();
-        ArrayList<WeatherForecast> threeDayForecast= getThreeDayForecast(city,startDate);
-        for(int i = 0;i<threeDayForecast.size();i++){
-            temperatures.add(threeDayForecast.get(i).getTemperature().getValue());
-        }
 
-
-        return temperatures;
-    }
-
-    public static ArrayList<Double> getThreeDayHumidityStarting(LocalDate startDate, String city){
-        LocalDate now = LocalDate.now();
-        if(startDate.isAfter(now.plusDays(2)) || (startDate.isBefore(now))){
-            throw new IllegalArgumentException("The trip has to end before 5 days from now.");
-        }
-        ArrayList<Double> humidities = new ArrayList<Double>();
-        ArrayList<WeatherForecast> threeDayForecast= getThreeDayForecast(city,startDate);
-        for(int i = 0;i<threeDayForecast.size();i++){
-            humidities.add((double)threeDayForecast.get(i).getHumidity().getValue());
-        }
-        return humidities;
-    }
-
-    public static ArrayList<Double> getThreeDayWindStarting(LocalDate startDate, String city){
-        LocalDate now = LocalDate.now();
-        if(startDate.isAfter(now.plusDays(2)) || (startDate.isBefore(now))){
-            throw new IllegalArgumentException("The trip has to end before 5 days from now.");
-        }
-        ArrayList<Double> winds = new ArrayList<Double>();
-        ArrayList<WeatherForecast> threeDayForecast= getThreeDayForecast(city,startDate);
-        for(int i = 0;i<threeDayForecast.size();i++){
-            winds.add((double)threeDayForecast.get(i).getWind().getSpeed());
-        }
-        return winds;
-    }
-
-    public static ArrayList<Double> getThreeDayCloudStarting(LocalDate startDate, String city){
-        LocalDate now = LocalDate.now();
-        if(startDate.isAfter(now.plusDays(2)) || (startDate.isBefore(now))){
-            throw new IllegalArgumentException("The trip has to end before 5 days from now.");
-        }
-        ArrayList<Double> cloudcovers = new ArrayList<Double>();
-        ArrayList<WeatherForecast> threeDayForecast= getThreeDayForecast(city,startDate);
-        for(int i = 0;i<threeDayForecast.size();i++){
-            cloudcovers.add((double)threeDayForecast.get(i).getClouds().getValue());
-        }
-        return cloudcovers;
-    }
-
-
-    public static ArrayList<WeatherForecast> getThreeDayForecast(String city,LocalDate startDate){
+    public static ArrayList<WeatherForecast> getThreeDayForecast(String city,LocalDate startDate) throws IllegalArgumentException{
         Forecast fiveDaysWeather;
         try{
             fiveDaysWeather = weatherClient
@@ -176,16 +120,13 @@ public class EasyWeather {
                     .retrieve()
                     .asJava();      //returns 5 day forecast with 3 hour diff in each timestamp
         }catch(NoDataFoundException ndfe){
-            if(ndfe.getMessage().contains("Data for provided parameters wasn't found")){
                 throw new IllegalArgumentException("The location entered might not be a valid location.");
-            }
-            else return null;
         }
 
         //we extract 3day forecast for only 9am and 6pm of each day
-        ArrayList<WeatherForecast> fiveDayForecast = new ArrayList<WeatherForecast>(fiveDaysWeather.getWeatherForecasts());
+        ArrayList<WeatherForecast> fiveDayForecast = new ArrayList<>(fiveDaysWeather.getWeatherForecasts());
         Iterator<WeatherForecast> fdit = fiveDayForecast.iterator();
-        ArrayList<WeatherForecast> threeDayForecast = new ArrayList<WeatherForecast>();
+        ArrayList<WeatherForecast> threeDayForecast = new ArrayList<>();
 
         int count =0;
         while(fdit.hasNext() && count<6){
@@ -201,7 +142,7 @@ public class EasyWeather {
     }
 
     private static WeatherForecast getFirstForecast(String location,LocalDate startDate){
-        ArrayList<WeatherForecast> allForecasts = null;
+        ArrayList<WeatherForecast> allForecasts;
         try{
             allForecasts = getThreeDayForecast(location,startDate);
         }
@@ -211,7 +152,7 @@ public class EasyWeather {
         return allForecasts.get(0);
     }
     private static WeatherForecast getSecondForecast(String location,LocalDate startDate){
-        ArrayList<WeatherForecast> allForecasts = null;
+        ArrayList<WeatherForecast> allForecasts;
         try{
             allForecasts = getThreeDayForecast(location,startDate);
         }
@@ -221,7 +162,7 @@ public class EasyWeather {
         return allForecasts.get(1);
     }
     private static WeatherForecast getThirdForecast(String location,LocalDate startDate){
-        ArrayList<WeatherForecast> allForecasts = null;
+        ArrayList<WeatherForecast> allForecasts;
         try{
             allForecasts = getThreeDayForecast(location,startDate);
         }
@@ -231,7 +172,7 @@ public class EasyWeather {
         return allForecasts.get(2);
     }
     private static WeatherForecast getFourthForecast(String location,LocalDate startDate){
-        ArrayList<WeatherForecast> allForecasts = null;
+        ArrayList<WeatherForecast> allForecasts;
         try{
             allForecasts = getThreeDayForecast(location,startDate);
         }
@@ -241,7 +182,7 @@ public class EasyWeather {
         return allForecasts.get(3);
     }
     private static WeatherForecast getFifthForecast(String location,LocalDate startDate){
-        ArrayList<WeatherForecast> allForecasts = null;
+        ArrayList<WeatherForecast> allForecasts;
         try{
             allForecasts = getThreeDayForecast(location,startDate);
         }
@@ -252,15 +193,46 @@ public class EasyWeather {
     }
 
     public static ArrayList<WeatherForecast> getTripForecast(ArrayList<String> locations,LocalDate startDate){
-        ArrayList<WeatherForecast> tripForecasts = new ArrayList<WeatherForecast>();
+        ArrayList<WeatherForecast> tripForecasts = new ArrayList<>();
         tripForecasts.add(getFirstForecast(locations.get(0),startDate));
+        cooldown();
         tripForecasts.add(getSecondForecast(locations.get(1),startDate));
+        cooldown();
         tripForecasts.add(getThirdForecast(locations.get(2),startDate));
+        cooldown();
         tripForecasts.add(getFourthForecast(locations.get(3),startDate));
+        cooldown();
         tripForecasts.add(getFifthForecast(locations.get(4),startDate));
 
         return tripForecasts;
     }
+
+    public static String getPrettyForecast(WeatherForecast fc,String location){
+        String str = "Location: "+location+", ";
+        if(fc==null){
+            return str+"Sorry I do not have data for that location. Maybe it is misspelled?";
+        }
+
+
+        str = str+"Weather State: "+fc.getWeatherState().getName()+"("+fc.getWeatherState().getDescription()+"), Temperature: "+fc.getTemperature().getValue()+" " +fc.getTemperature().getUnit()+", "+fc.getClouds().toString()+", Wind:"+fc.getWind().getSpeed()+" "+fc.getWind().getUnit()+", ";
+        if(fc.getRain()!=null){
+            str=str+fc.getRain().toString();
+        }
+        return str;
+
+    }
+
+
+
+    private static void cooldown(){
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
 
 
 

@@ -6,13 +6,14 @@ import org.apache.hc.core5.http.HttpEntity;
 import org.apache.hc.core5.http.ParseException;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.http.io.entity.StringEntity;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Stack;
+import java.util.StringJoiner;
 
 public class EasyOpenAI {
     private static final String API_TOKEN = "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";
@@ -51,11 +52,18 @@ public class EasyOpenAI {
             System.out.println("Sorry I didn't catch a location in your input. Please try again.");
             return null;
         }
-        if(output.indexOf(",")!=-1){        //if there is more than one location we return the first one only
+        if(output.contains(",")){        //if there is more than one location we return the first one only
             System.out.println("You have entered a few locations but I can only give you the weather for one at a time.");
             output=output.substring(0,output.indexOf(","));
         }
         messages.clear();
+        if(output.contains("dublin")){
+            return "dublin,ie";
+        }
+        if(output.contains("rome")){
+            return "rome,IT";
+        }
+
         return output;
     }
 
@@ -74,9 +82,37 @@ public class EasyOpenAI {
         messages.clear();
         String[] tokenArray = tokens.split(",");
         ArrayList<String> tokenList = new ArrayList<String>(Arrays.asList(tokenArray));
+        for(int i = 0;i<tokenList.size();i++){
+            if(tokenList.get(i).contains("dublin")){
+                tokenList.set(i,"dublin,ie");
+            }
+        }
         return tokenList;
     }
 
+    public String getClothRecommendations(String weather){
+        addMessage("system","I am a chatbot that tells users what kind of clothes to weather for certain weather conditions." + "My answers are about 60 words long."); // gaslight the bot into thinking it's an NLP that returns location tokens
+        weather = weather.replace("°"," degrees ");
+        if(weather.contains("Sorry I do not have data for that location. Maybe it is misspelled?"))
+            return"Sorry, I can't recommend clothes for a null weather.";
+        addMessage("user",  "What should I wear if the weather is as follows :'"+weather+"'.");   //gets chatgpt to make recommedations on what clothes to wear.
+        NormalSend();
+        String recommendation = Receive();
+        messages.clear();
+        StringJoiner stringJoiner = new StringJoiner("\n");
+        String [] tokens = recommendation.split(" ");
+        String str =tokens[0];
+        for(int  i = 1; i <tokens.length;i++){
+            str=str+" "+tokens[i];
+            if(i%15==0){
+                stringJoiner.add(str);
+                str="";
+            }
+        }
+        stringJoiner.add(str);
+        String wrappedText = stringJoiner.toString();
+        return wrappedText;
+    }
 
     private void NLPSend() { // Send request to API
 
@@ -89,15 +125,19 @@ public class EasyOpenAI {
         httpPost.setEntity(entity);
     }
 
-    private void ItinerarySend() { // Send request to API
+    private void NormalSend() { // Send request to API
 
         requestBody.put("model", "gpt-3.5-turbo");
         requestBody.put("max_tokens", 1000);
         requestBody.put("messages", messages); // Send messages
+        requestBody.put("temperature", 0.5); // Set temperature to 0.1 // makes AI more predictable
+        requestBody.put("top_p", 0.5); // Set top_p to 0.1      //makes AI more likely to give the same answer every time.
 
         StringEntity entity = new StringEntity(requestBody.toString());
         httpPost.setEntity(entity);
     }
+
+
 
     private String Receive() {
         CloseableHttpResponse response = null;
@@ -107,16 +147,22 @@ public class EasyOpenAI {
             throw new RuntimeException(e);
         }
         HttpEntity responseEntity = response.getEntity();
-        String responseString = null;
+        String responseString;
         try {
             responseString = EntityUtils.toString(responseEntity);
         } catch (IOException | ParseException e) {
             throw new RuntimeException(e);
         }
 
-
+        String content = "";
         responseObject = new JSONObject(responseString);
-        String content = responseObject.getJSONArray("choices").getJSONObject(0).getJSONObject("message").getString("content");
+        try{
+             content = responseObject.getJSONArray("choices").getJSONObject(0).getJSONObject("message").getString("content");
+        }catch(JSONException je){
+            System.out.println("Please slow down. I can only handle a certain number of requests in a minute. Please wait for 20 seconds. ");
+            return "null";
+        }
+
         return content;
     }
 }

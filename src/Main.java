@@ -8,6 +8,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -15,7 +16,9 @@ import java.util.regex.Pattern;
 
 public class Main {
     public static void main(String[] args) throws IOException, ParseException {
-        System.out.println("Hi, I'm WeatherBot. I can help you with all your weather needs.");
+        System.out.println("Hi, I'm WeatherBot. I can help you with all your weather needs.\n" +
+                "I can understand you better if you type in full sentences.");
+        System.out.println("Also you can type 'exit' to get out of the program.");
         String mode = null;
         Scanner scanner = new Scanner(System.in);
         do {
@@ -28,7 +31,6 @@ public class Main {
                 getWeatherForTrip(scanner);
             }
         } while (mode != null);
-//        ArrayList<WeatherForecast> weathers = EasyWeather.getThreeDayForecast("mumbai",LocalDate.now());
 
 
 
@@ -37,7 +39,6 @@ public class Main {
     public static String askUserAboutMode(Scanner scanner) {
         String mode = null;
         System.out.println("I have live weather mode and trip planning mode. Which mode would you like to select?");
-        System.out.println("Also you can type 'exit' to get out of the program.");
         while (scanner.hasNext()) {
             mode = scanner.nextLine().toLowerCase().trim();     //gets the trimmed and lowercase input
             if(mode.isEmpty()) continue;
@@ -58,7 +59,7 @@ public class Main {
         return mode;
     }
 
-    public static void askForCity(Scanner scanner) {
+    public static void askForCity(Scanner scanner) {        //Live Weather Mode
         System.out.println("what place would you like to know the current weather for?");
         EasyOpenAI openAI = new EasyOpenAI();
         while (scanner.hasNext()) {
@@ -81,10 +82,9 @@ public class Main {
     }
 
     public static String getWeather(String city) {
-        EasyWeather easyWeather = new EasyWeather();
         Weather weather = null;
         try {
-            weather = easyWeather.getWeatherByCity(city);
+            weather = EasyWeather.getWeatherByCity(city);
         } catch (IllegalArgumentException iae) {       //if there is an illegal argument exception it probably means
             // there is a spelling mistake in the location or the location does not exist
             System.out.println(iae.getMessage());
@@ -99,21 +99,16 @@ public class Main {
 
     }
 
-
-
-
-    public static void getWeatherForTrip(Scanner scanner) {
+    public static void getWeatherForTrip(Scanner scanner) {         //trip Planning Mode
         System.out.println("You are now in Trip-Planning Mode. Type 'exit' if you want to exit this mode.");
         System.out.println("enter the names of 5 cities that you are going travel to within 3 days ");
-        ArrayList<String> locations = get5CitiesFromUser(scanner);
-        LocalDate startDate = getStartDateFromUser(scanner,locations);
+        ArrayList<String> locations = get5CitiesFromUser(scanner);      //hold the 5 cities that the user will travel to
+        LocalDate startDate = getStartDateFromUser(scanner,locations);      //gets a valid start date from user
         System.out.println("ok so the start date is :"+startDate.toString());
         System.out.println("So the weather at those places for the trip is:");
-        ArrayList<WeatherForecast> tripForecast = EasyWeather.getTripForecast(locations,startDate);
-        for(int i = 0 ; i < 5 ; i++){
-            System.out.print(capitaliseFirst(locations.get(i))+": ");
-            System.out.println(tripForecast.get(i));
-        }
+        ArrayList<WeatherForecast> tripForecast = EasyWeather.getTripForecast(locations,startDate);         //gets the required forecasts
+        ArrayList<String> prettyFCs =  getPrettyForecasts(tripForecast,locations);// gets and prints formatted weather forecasts
+        printClothRecommendations(prettyFCs,locations);
 
     }
 
@@ -189,6 +184,9 @@ public class Main {
                 }
                 return LocalDate.now().plusDays(1);
             }
+            else if (input.contains("day after")){
+                return LocalDate.now().plusDays(2);
+            }
             else if (validDate(input,formatter)) {
                 LocalDate startDate = LocalDate.parse(input, formatter);
                 if(startDate.isAfter(LocalDate.now().plusDays(2)) || (startDate.isBefore(LocalDate.now()))){
@@ -220,6 +218,36 @@ public class Main {
         String result = str.substring(0,1).toUpperCase();
         return result+str.substring(1);
     }
+
+    public static ArrayList<String> getPrettyForecasts(ArrayList<WeatherForecast> fcs,ArrayList<String> locations){
+        ArrayList<String> prettyFCs = new ArrayList<String>();
+        for (int i = 0 ; i <fcs.size();i++){
+            String prettyFC = EasyWeather.getPrettyForecast(fcs.get(i),locations.get(i));
+            prettyFCs.add(prettyFC);
+            System.out.println(prettyFC);
+        }
+        return prettyFCs;
+    }
+
+    public static void printClothRecommendations(ArrayList<String> messages,ArrayList<String> locations){
+        EasyOpenAI openAI = new EasyOpenAI();
+        for(int i = 0 ; i <messages.size();i++){
+            System.out.println();
+            System.out.println("Getting cloth recommendations for : "+locations.get(i)+". Please Wait...");
+            System.out.println();
+            try {
+                Thread.sleep(20000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+            System.out.println(openAI.getClothRecommendations(messages.get(i)));
+
+        }
+
+    }
+
+
 }
 
 
