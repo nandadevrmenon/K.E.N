@@ -2,8 +2,6 @@
 import com.github.prominence.openweathermap.api.model.forecast.WeatherForecast;
 import com.github.prominence.openweathermap.api.model.weather.Weather;
 import org.apache.hc.core5.http.ParseException;
-
-import java.awt.image.AreaAveragingScaleFilter;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -20,20 +18,18 @@ public class Main {
     public static void main(String[] args) throws IOException, ParseException {
         System.out.println("Hi, I'm WeatherBot. I can help you with all your weather needs.\n" +
                 "I can understand you better if you type in full sentences.");
-        EasyOpenAI openAI = new EasyOpenAI();
-        openAI.getClothRecommendations("Location: kuching, Weather State: Rain(light rain), Temperature: 26.54 °C, Clouds: 100%, Wind:0.96 meter/sec, 3-hour rain level: 0.22 mm");
-//        String mode = null;
-//        Scanner scanner = new Scanner(System.in);
-//        do {
-//            mode = askUserAboutMode(scanner);
-//            if (mode == null) break;
-//            if (mode.equals("current")) {
-//                askForCity(scanner);
-//            }
-//            if (mode.equals("trip")) {
-//                getWeatherForTrip(scanner);
-//            }
-//        } while (mode != null);
+        String mode = null;
+        Scanner scanner = new Scanner(System.in);
+        do {
+            mode = askUserAboutMode(scanner);
+            if (mode == null) break;
+            if (mode.equals("current")) {
+                askForCity(scanner);
+            }
+            if (mode.equals("trip")) {
+                getWeatherForTrip(scanner);
+            }
+        } while (mode != null);
 
 
 
@@ -112,7 +108,7 @@ public class Main {
         System.out.println("So the weather at those places for the trip is:");
         ArrayList<WeatherForecast> tripForecast = EasyWeather.getTripForecast(locations,startDate);         //gets the required forecasts
         ArrayList<String> prettyFCs =  getPrettyForecasts(tripForecast,locations);// gets and prints formatted weather forecasts
-        printClothRecommendations(prettyFCs);
+        printClothRecommendations(prettyFCs,locations);
 
     }
 
@@ -230,9 +226,19 @@ public class Main {
         return prettyFCs;
     }
 
-    public static void printClothRecommendations(ArrayList<String> messages){
+    public static void printClothRecommendations(ArrayList<String> messages,ArrayList<String> locations){
         EasyOpenAI openAI = new EasyOpenAI();
-        openAI.getClothRecommendations(messages.get(0));
+        for(int i = 0 ; i <messages.size();i++){
+            System.out.println("Getting cloth recommendations for : "+locations.get(i)+". Please Wait...");
+            System.out.println(openAI.getClothRecommendations(messages.get(i)));
+
+            try {
+                Thread.sleep(10000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
     }
 
 
