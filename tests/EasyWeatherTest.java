@@ -222,6 +222,10 @@ class EasyWeatherTest {
         weather=weather+fc.getRain().toString();
         }
         assertTrue( EasyWeather.getPrettyForecast(fc,location).equals(weather));
+
+        location ="rubbish";
+         weather = "Sorry I do not have data for that location. Maybe it is misspelled?";
+        assertTrue(EasyWeather.getPrettyForecast(fc,location).equals(weather));
 }
 
 
