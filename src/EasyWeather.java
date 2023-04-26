@@ -124,9 +124,9 @@ public class EasyWeather {
         }
 
         //we extract 3day forecast for only 9am and 6pm of each day
-        ArrayList<WeatherForecast> fiveDayForecast = new ArrayList<WeatherForecast>(fiveDaysWeather.getWeatherForecasts());
+        ArrayList<WeatherForecast> fiveDayForecast = new ArrayList<>(fiveDaysWeather.getWeatherForecasts());
         Iterator<WeatherForecast> fdit = fiveDayForecast.iterator();
-        ArrayList<WeatherForecast> threeDayForecast = new ArrayList<WeatherForecast>();
+        ArrayList<WeatherForecast> threeDayForecast = new ArrayList<>();
 
         int count =0;
         while(fdit.hasNext() && count<6){
@@ -142,7 +142,7 @@ public class EasyWeather {
     }
 
     private static WeatherForecast getFirstForecast(String location,LocalDate startDate){
-        ArrayList<WeatherForecast> allForecasts = null;
+        ArrayList<WeatherForecast> allForecasts;
         try{
             allForecasts = getThreeDayForecast(location,startDate);
         }
@@ -152,7 +152,7 @@ public class EasyWeather {
         return allForecasts.get(0);
     }
     private static WeatherForecast getSecondForecast(String location,LocalDate startDate){
-        ArrayList<WeatherForecast> allForecasts = null;
+        ArrayList<WeatherForecast> allForecasts;
         try{
             allForecasts = getThreeDayForecast(location,startDate);
         }
@@ -162,7 +162,7 @@ public class EasyWeather {
         return allForecasts.get(1);
     }
     private static WeatherForecast getThirdForecast(String location,LocalDate startDate){
-        ArrayList<WeatherForecast> allForecasts = null;
+        ArrayList<WeatherForecast> allForecasts;
         try{
             allForecasts = getThreeDayForecast(location,startDate);
         }
@@ -172,7 +172,7 @@ public class EasyWeather {
         return allForecasts.get(2);
     }
     private static WeatherForecast getFourthForecast(String location,LocalDate startDate){
-        ArrayList<WeatherForecast> allForecasts = null;
+        ArrayList<WeatherForecast> allForecasts;
         try{
             allForecasts = getThreeDayForecast(location,startDate);
         }
@@ -182,7 +182,7 @@ public class EasyWeather {
         return allForecasts.get(3);
     }
     private static WeatherForecast getFifthForecast(String location,LocalDate startDate){
-        ArrayList<WeatherForecast> allForecasts = null;
+        ArrayList<WeatherForecast> allForecasts;
         try{
             allForecasts = getThreeDayForecast(location,startDate);
         }
@@ -193,7 +193,7 @@ public class EasyWeather {
     }
 
     public static ArrayList<WeatherForecast> getTripForecast(ArrayList<String> locations,LocalDate startDate){
-        ArrayList<WeatherForecast> tripForecasts = new ArrayList<WeatherForecast>();
+        ArrayList<WeatherForecast> tripForecasts = new ArrayList<>();
         tripForecasts.add(getFirstForecast(locations.get(0),startDate));
         cooldown();
         tripForecasts.add(getSecondForecast(locations.get(1),startDate));
@@ -207,11 +207,18 @@ public class EasyWeather {
         return tripForecasts;
     }
 
+    public static String getPrettyForecast(WeatherForecast fc,String location){
+
+        String str = "Location: "+location+", ";
+        return str;
+
+    }
+
 
 
     private static void cooldown(){
         try {
-            Thread.sleep((long)500);
+            Thread.sleep(500);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }

@@ -11,7 +11,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Stack;
 
 public class EasyOpenAI {
@@ -52,7 +51,7 @@ public class EasyOpenAI {
             System.out.println("Sorry I didn't catch a location in your input. Please try again.");
             return null;
         }
-        if(output.indexOf(",")!=-1){        //if there is more than one location we return the first one only
+        if(output.contains(",")){        //if there is more than one location we return the first one only
             System.out.println("You have entered a few locations but I can only give you the weather for one at a time.");
             output=output.substring(0,output.indexOf(","));
         }
@@ -133,7 +132,7 @@ public class EasyOpenAI {
             throw new RuntimeException(e);
         }
         HttpEntity responseEntity = response.getEntity();
-        String responseString = null;
+        String responseString;
         try {
             responseString = EntityUtils.toString(responseEntity);
         } catch (IOException | ParseException e) {

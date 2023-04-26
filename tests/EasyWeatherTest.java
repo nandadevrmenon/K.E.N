@@ -1,6 +1,8 @@
 import com.github.prominence.openweathermap.api.OpenWeatherMapClient;
 import com.github.prominence.openweathermap.api.enums.Language;
 import com.github.prominence.openweathermap.api.enums.UnitSystem;
+import com.github.prominence.openweathermap.api.model.Clouds;
+import com.github.prominence.openweathermap.api.model.WeatherState;
 import com.github.prominence.openweathermap.api.model.forecast.WeatherForecast;
 import com.github.prominence.openweathermap.api.model.weather.Weather;
 import org.junit.jupiter.api.Test;
@@ -208,6 +210,19 @@ class EasyWeatherTest {
         assertTrue(tripForecasts.get(3) != null);
         assertTrue(tripForecasts.get(4) != null);
     }
+
+@Test
+    public void testGetPrettyForecast(){
+        ArrayList<WeatherForecast> forecast = EasyWeather.getTripForecast(new ArrayList<String>(Arrays.asList("nagaland","kuching","los angeles","askjdas","Lagos")),LocalDate.now());
+        String location ="Kuching";
+        WeatherForecast fc = forecast.get(1);
+        String weather = "Location: "+location +", Weather State: "+fc.getWeatherState().getName()+"("+fc.getWeatherState().getDescription()+"), ";
+        weather = weather + "Temperature: "+fc.getTemperature().getValue()+" " +fc.getTemperature().getUnit()+", "+fc.getClouds().toString()+", Wind:"+fc.getWind().getSpeed()+" "+fc.getWind().getUnit()+", ";
+        if(fc.getRain()!=null){
+        weather=weather+fc.getRain().toString();
+        }
+        assertTrue( EasyWeather.getPrettyForecast(fc,location).equals(weather));
+}
 
 
 
