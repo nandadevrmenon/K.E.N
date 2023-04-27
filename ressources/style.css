@@ -1,0 +1,59 @@
+/* Set the background color of the AnchorPane to black */
+--fx-background-color {
+rgba(52, 53, 65);
+}
+
+.anchor-pane {
+    -fx-background-color: rgba(52, 53, 65);
+}
+
+.list-view .list-cell:odd {
+    -fx-background-color: rgba(50, 50, 60);
+}
+
+.list-view .list-cell:even {
+    -fx-background-color: rgba(52, 53, 65);
+}
+
+.list-cell {
+    -fx-font-size: 20.0;
+    -fx-font-family: "JetBrains Mono";
+}
+
+.list-view {
+    text-area-background: rgba(50, 50, 60);
+}
+
+.text-area .content {
+    -fx-background-color: text-area-background;
+    -fx-highlight-text-fill: white;
+
+}
+
+.text-field {
+    -fx-background-color: rgba(50, 50, 60);
+    -fx-font-family: "JetBrains Mono";
+
+}
+
+/* Set the font color of the Text nodes to white */
+.text {
+    -fx-fill: white;
+}
+
+.text-input {
+    -fx-text-fill: white;
+}
+
+.button {
+    -fx-background-color: rgba(50, 50, 60);
+    -fx-text-fill: white;
+}
+
+.button:hover {
+    -fx-background-color: rgba(60, 60, 70);
+}
+
+.button:pressed {
+    -fx-background-color: rgba(40, 40, 50);
+}
