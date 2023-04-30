@@ -189,7 +189,7 @@ public class MainTest {
     @Test
     public void testCapitaliseFirstSingleLetter() {
         // Arrange
-        String input = "";
+        String input = "a";
         String expectedOutput = "A";
 
         // Act
