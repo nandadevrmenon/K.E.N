@@ -136,11 +136,7 @@ public class Main {
             }
             if (locations.size() == 5) {                    //if we have 5 locations we display a sample schedule
                 // and ask the user to confirm it, so we can provide relatively more accurate info
-                System.out.println("So I'm assuming that time line for the trip is as follows");
-                System.out.println("Day one : " + locations.get(0) + " and " + locations.get(1));
-                System.out.println("Day two : " + locations.get(2) + " and " + locations.get(3));
-                System.out.println("Day three : " + locations.get(4));
-                System.out.println("If you want to changes these locations type 'clear' and add locations again.Or type 'continue' to get on with the next step.");
+                printSchedule(locations);
                 if (scanner.nextLine().toLowerCase().trim().contains("clear")) {      //if the user inputs 'clear we clear all locations and try again
                     System.out.println("Enter the names of 5 cities that you going to travel two within a three day time period.");
                     locations.clear();
@@ -203,6 +199,13 @@ public class Main {
     }
 
 
+    public static void printSchedule(ArrayList<String> locations){
+        System.out.println("So I'm assuming that time line for the trip is as follows");
+        System.out.println("Day one : " + locations.get(0) + " and " + locations.get(1));
+        System.out.println("Day two : " + locations.get(2) + " and " + locations.get(3));
+        System.out.println("Day three : " + locations.get(4));
+        System.out.println("If you want to changes these locations type 'clear' and add locations again.Or type 'continue' to get on with the next step.");
+    }
 
 
     public static boolean validDate(String input, DateTimeFormatter formatter){
@@ -236,7 +239,7 @@ public class Main {
             System.out.println("Getting cloth recommendations for : "+locations.get(i)+". Please Wait...");
             System.out.println();
             try {
-                Thread.sleep(20000);
+                Thread.sleep(18000);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -244,7 +247,7 @@ public class Main {
             System.out.println(openAI.getClothRecommendations(messages.get(i)));
 
         }
-
+        System.out.println();
     }
 
 

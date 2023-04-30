@@ -189,7 +189,7 @@ public class MainTest {
     @Test
     public void testCapitaliseFirstSingleLetter() {
         // Arrange
-        String input = "a";
+        String input = "";
         String expectedOutput = "A";
 
         // Act
@@ -199,17 +199,6 @@ public class MainTest {
         assertEquals(expectedOutput, output);
     }
 
-//    @Test
-//    void testGetWeather() {
-//    String input = "London";
-//        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
-//        System.setIn(in);
-//
-//        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-//        System.setOut(new PrintStream(outContent));
-//
-//
-//    }
 
 
 }

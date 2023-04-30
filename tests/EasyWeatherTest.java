@@ -205,7 +205,7 @@ class EasyWeatherTest {
         LocalDate startDate = LocalDate.now().plusDays(1);
         tripForecasts= EasyWeather.getTripForecast(locations,startDate);
         assertTrue(tripForecasts.get(0) != null);
-        assertTrue(tripForecasts.get(1) == null);
+        assertTrue(tripForecasts.get(1) == null);       //tests that null is returned when it's an invalid location
         assertTrue(tripForecasts.get(2) == null);
         assertTrue(tripForecasts.get(3) != null);
         assertTrue(tripForecasts.get(4) != null);
