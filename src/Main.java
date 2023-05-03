@@ -156,17 +156,17 @@ public class Main {
     public static LocalDate getStartDateFromUser(Scanner scanner, ArrayList<String> locations) {
         System.out.println("When are you starting the trip?( Accepted formats: today,tomorrow,day after tomorrow,dd/MM/YYYY)");
         System.out.println("(Note: The API we use only allows a 5 day forecast so your trip has to start between today and the day after tomorrow.)");
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");        //create a datetimeformatter
 
-        while(scanner.hasNext()) {
-            String input = scanner.nextLine().toLowerCase().trim();
-            if(input.isEmpty()) continue;
-            if (input.contains("now") || input.contains("today")) {
-                if(LocalTime.now().isAfter(LocalTime.of(18,0,0,0))){
+        while(scanner.hasNext()) {      //while user inputs date
+            String input = scanner.nextLine().toLowerCase().trim();     //we clean input
+            if(input.isEmpty()) continue;                                       //if input is empty we just continue and wait till user actually inputs something
+            if (input.contains("now") || input.contains("today")) {             //if input contains now or today then we consider that the requested date is today
+                if(LocalTime.now().isAfter(LocalTime.of(18,0,0,0))){        //if the time for current day is part 6pm then we the API settings we use don't allow us to access the forcast for the end of the 5th day. So we can only start the trip the next day.
                     System.out.println("The day is almost over. You can use the live weather to check today's weather \n and then we can plan the trip for you starting tomorrow.");
                     return LocalDate.now().plusDays(1);
                 }
-                if(LocalTime.now().isAfter(LocalTime.of(9, 00, 00, 0))){
+                if(LocalTime.now().isAfter(LocalTime.of(9, 00, 00, 0))){            //if the time is after 9 then we assum that only one location can be visited one the first day.
                     System.out.println("Since your starting the trip now, I am assuming the schedule looks like this: ");
                     System.out.println("Day one : " + locations.get(0));
                     System.out.println("Day two : " + locations.get(1) + " and " + locations.get(2));
@@ -174,8 +174,8 @@ public class Main {
                 }
                 return LocalDate.now();
             }
-            else if (input.contains("tomorrow")) {
-                if (input.contains("day after")) {
+            else if (input.contains("tomorrow")) {      //if input contains tomorrow
+                if (input.contains("day after")) {          //and it contains 'day after' we return the object for the day after tomorrow
                     return LocalDate.now().plusDays(2);
                 }
                 return LocalDate.now().plusDays(1);
@@ -183,7 +183,7 @@ public class Main {
             else if (input.contains("day after")){
                 return LocalDate.now().plusDays(2);
             }
-            else if (validDate(input,formatter)) {
+            else if (validDate(input,formatter)) {          //if date is in forat dd/mm/yyyy but the date is outside bounds we say that to the user
                 LocalDate startDate = LocalDate.parse(input, formatter);
                 if(startDate.isAfter(LocalDate.now().plusDays(2)) || (startDate.isBefore(LocalDate.now()))){
                     System.out.println("That date is outside the bounds for which I can provide you a forecast. Please try again when the date comes closer.");
@@ -191,7 +191,7 @@ public class Main {
                 }
                 return startDate;
             }
-            else {
+            else {      //else it means tha the dat is not ina ny of the formats we accept
                 System.out.println("The date you have entered is not in a format I can understand. Please try to be clearer.");
             }
         }
@@ -199,7 +199,7 @@ public class Main {
     }
 
 
-    public static void printSchedule(ArrayList<String> locations){
+    public static void printSchedule(ArrayList<String> locations){      //prints out trip schedule
         System.out.println("So I'm assuming that time line for the trip is as follows");
         System.out.println("Day one : " + locations.get(0) + " and " + locations.get(1));
         System.out.println("Day two : " + locations.get(2) + " and " + locations.get(3));
@@ -208,11 +208,11 @@ public class Main {
     }
 
 
-    public static boolean validDate(String input, DateTimeFormatter formatter){
+    public static boolean validDate(String input, DateTimeFormatter formatter){     //checks if the dat is in a given format
         try{
-            LocalDate.parse(input,formatter);
+            LocalDate.parse(input,formatter);       //tries to parse date
         }catch(DateTimeParseException dtpe){
-            return false;
+            return false;           //if failed return false;
         }
         return true;
     }
@@ -222,9 +222,9 @@ public class Main {
         return result+str.substring(1);
     }
 
-    public static ArrayList<String> getPrettyForecasts(ArrayList<WeatherForecast> fcs,ArrayList<String> locations){
+    public static ArrayList<String> getPrettyForecasts(ArrayList<WeatherForecast> fcs,ArrayList<String> locations){  //returns string array of pretty formatted forecasts
         ArrayList<String> prettyFCs = new ArrayList<String>();
-        for (int i = 0 ; i <fcs.size();i++){
+        for (int i = 0 ; i <fcs.size();i++){        //for each ForeCast object, get the pretty forecast and add it into array
             String prettyFC = EasyWeather.getPrettyForecast(fcs.get(i),locations.get(i));
             prettyFCs.add(prettyFC);
             System.out.println(prettyFC);
@@ -233,13 +233,13 @@ public class Main {
     }
 
     public static void printClothRecommendations(ArrayList<String> messages,ArrayList<String> locations){
-        EasyOpenAI openAI = new EasyOpenAI();
+        EasyOpenAI openAI = new EasyOpenAI();                 //for each for pretyForecast, we use OpenAI to print out clcothing recommendations
         for(int i = 0 ; i <messages.size();i++){
             System.out.println();
             System.out.println("Getting cloth recommendations for : "+locations.get(i)+". Please Wait...");
             System.out.println();
             try {
-                Thread.sleep(18000);
+                Thread.sleep(18000);        //we sleep for 18000 ms since OpenAI API has a cooldown of 20 seconds after each request.
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }

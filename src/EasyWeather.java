@@ -17,18 +17,18 @@ public class EasyWeather {
     public static Weather getWeatherByCity(String city) throws IllegalArgumentException{
         Weather weather;
         try{
-            weather= weatherClient.currentWeather()
-                    .single()
-                    .byCityName(city)
-                    .language(Language.ENGLISH)
-                    .unitSystem(UnitSystem.METRIC)
+            weather= weatherClient.currentWeather() //current weather requester
+                    .single()       //single location
+                    .byCityName(city)   //by city name
+                    .language(Language.ENGLISH)//language
+                    .unitSystem(UnitSystem.METRIC)//units
                     .retrieve()
-                    .asJava();
+                    .asJava();// as java object
         }catch(NoDataFoundException ndfe){
-            if(ndfe.getMessage().contains("Data for provided parameters wasn't found")){
+            if(ndfe.getMessage().contains("Data for provided parameters wasn't found")){    // if data isn't found for a location we return null
                 throw new IllegalArgumentException("The location entered might not be a valid location.");
-            }
-            else weather = null;
+                }
+                else weather = null;
         }
         return weather;
     }
@@ -36,7 +36,7 @@ public class EasyWeather {
     public static double getTemperatureByCity(String city){
         Weather weather;
         try{
-            weather = getWeatherByCity(city);
+            weather = getWeatherByCity(city);   //gets overall weather for that city
         }catch(IllegalArgumentException iae){
             return -300;            //use -300 as en error code to tell us that the location entered isn't a valid location
         }
@@ -51,7 +51,7 @@ public class EasyWeather {
     public static double getHumidityByCity(String city){
         Weather weather;
         try{
-            weather = getWeatherByCity(city);
+            weather = getWeatherByCity(city); //gets overall weather for that city
         }catch(IllegalArgumentException iae){
             return -300;            //use -300 as en error code to tell us that the location entered isn't a valid location
         }
@@ -64,7 +64,7 @@ public class EasyWeather {
     public static double getWindByCity(String city){
         Weather weather;
         try{
-            weather = getWeatherByCity(city);
+            weather = getWeatherByCity(city); //gets overall weather for that city
         }catch(IllegalArgumentException iae){
             return -300;            //use -300 as en error code to tell us that the location entered isn't a valid location
         }
@@ -79,7 +79,7 @@ public class EasyWeather {
     public static double getCloudByCity(String city){
         Weather weather;
         try{
-            weather = getWeatherByCity(city);
+            weather = getWeatherByCity(city); //gets overall weather for that city
         }catch(IllegalArgumentException iae){
             return -300;            //use -300 as en error code to tell us that the location entered isn't a valid location
         }
@@ -93,7 +93,7 @@ public class EasyWeather {
     public static double getRainByCity(String city){
         Weather weather;
         try{
-            weather = getWeatherByCity(city);
+            weather = getWeatherByCity(city); //gets overall weather for that city
         }catch(IllegalArgumentException iae){
             return -300;            //use -300 as en error code to tell us that the location entered isn't a valid location
         }
@@ -144,7 +144,7 @@ public class EasyWeather {
     private static WeatherForecast getFirstForecast(String location,LocalDate startDate){
         ArrayList<WeatherForecast> allForecasts;
         try{
-            allForecasts = getThreeDayForecast(location,startDate);
+            allForecasts = getThreeDayForecast(location,startDate);     //gets 3 day forecast and gets the first forecast from that
         }
         catch(IllegalArgumentException iae){
             return null;
@@ -154,7 +154,7 @@ public class EasyWeather {
     private static WeatherForecast getSecondForecast(String location,LocalDate startDate){
         ArrayList<WeatherForecast> allForecasts;
         try{
-            allForecasts = getThreeDayForecast(location,startDate);
+            allForecasts = getThreeDayForecast(location,startDate);    //gets 3 day forecast and gets the second forecast from that
         }
         catch(IllegalArgumentException iae){
             return null;
@@ -164,7 +164,7 @@ public class EasyWeather {
     private static WeatherForecast getThirdForecast(String location,LocalDate startDate){
         ArrayList<WeatherForecast> allForecasts;
         try{
-            allForecasts = getThreeDayForecast(location,startDate);
+            allForecasts = getThreeDayForecast(location,startDate);   //gets 3 day forecast and gets the third forecast from that
         }
         catch(IllegalArgumentException iae){
             return null;
@@ -174,7 +174,7 @@ public class EasyWeather {
     private static WeatherForecast getFourthForecast(String location,LocalDate startDate){
         ArrayList<WeatherForecast> allForecasts;
         try{
-            allForecasts = getThreeDayForecast(location,startDate);
+            allForecasts = getThreeDayForecast(location,startDate);   //gets 3 day forecast and gets the fourth forecast from that
         }
         catch(IllegalArgumentException iae){
             return null;
@@ -184,7 +184,7 @@ public class EasyWeather {
     private static WeatherForecast getFifthForecast(String location,LocalDate startDate){
         ArrayList<WeatherForecast> allForecasts;
         try{
-            allForecasts = getThreeDayForecast(location,startDate);
+            allForecasts = getThreeDayForecast(location,startDate);    //gets 3 day forecast and gets the fifth forecast from that
         }
         catch(IllegalArgumentException iae){
             return null;
@@ -192,7 +192,7 @@ public class EasyWeather {
         return allForecasts.get(4);
     }
 
-    public static ArrayList<WeatherForecast> getTripForecast(ArrayList<String> locations,LocalDate startDate){
+    public static ArrayList<WeatherForecast> getTripForecast(ArrayList<String> locations,LocalDate startDate){      //gets the trip forcasts for 5 different locations
         ArrayList<WeatherForecast> tripForecasts = new ArrayList<>();
         tripForecasts.add(getFirstForecast(locations.get(0),startDate));
         cooldown();
@@ -207,7 +207,7 @@ public class EasyWeather {
         return tripForecasts;
     }
 
-    public static String getPrettyForecast(WeatherForecast fc,String location){
+    public static String getPrettyForecast(WeatherForecast fc,String location){     //takes in a weather Forecast object and retunrs only the important information in a formatted string
         String str = "Location: "+location+", ";
         if(fc==null){
             return str+"Sorry I do not have data for that location. Maybe it is misspelled?";
@@ -224,7 +224,7 @@ public class EasyWeather {
 
 
 
-    private static void cooldown(){
+    private static void cooldown(){     //stops the thread for a small amount of time
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {

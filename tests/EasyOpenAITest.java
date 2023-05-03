@@ -7,7 +7,7 @@ import static org.junit.Assert.*;
 
 class EasyOpenAITest {
     @Test
-    public void testgetSingleCityToken(){
+    public void testgetSingleCityToken(){         //test different inputs and see if we get only the first city name
         String input = "I wanna go to new york and manhattan";
         EasyOpenAI openai = new EasyOpenAI();
         String output = openai.getSingleCityToken(input);
@@ -21,7 +21,7 @@ class EasyOpenAITest {
     }
 
     @Test
-    public void testGetgetAllCityTokens(){
+    public void testGetgetAllCityTokens(){      //test that we get all city names out of a line
         String input = "I wanna go to new york and manhattan";
         EasyOpenAI openai = new EasyOpenAI();
         ArrayList<String> output = openai.getAllCityTokens(input);
@@ -34,8 +34,4 @@ class EasyOpenAITest {
         assertTrue(output.equals(new ArrayList<String>(Arrays.asList("dublin,ie", "cork","swords","santry","tallaght"))));
     }
 
-
-    public void testGetClothRecommednations(){
-
-    }
 }
