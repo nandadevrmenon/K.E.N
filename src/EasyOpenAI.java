@@ -57,7 +57,7 @@ public class EasyOpenAI {
             output=output.substring(0,output.indexOf(","));
         }
         messages.clear();
-        if(output.contains("dublin")){
+        if(output.contains("dublin")){      //correct edge cases because the API favours cities in the USA with the same name
             return "dublin,ie";
         }
         if(output.contains("rome")){
@@ -91,14 +91,16 @@ public class EasyOpenAI {
     }
 
     public String getClothRecommendations(String weather){
-        addMessage("system","I am a chatbot that tells users what kind of clothes to weather for certain weather conditions." + "My answers are about 60 words long."); // gaslight the bot into thinking it's an NLP that returns location tokens
-        weather = weather.replace("°"," degrees ");
+        addMessage("system","I am a chatbot that tells users what kind of clothes to weather for certain weather conditions." + "My answers are about 60 words long."); // gaslight the bot into thinking it's made to recommend cloths for certain weather conditions
+        weather = weather.replace("°"," degrees ");     //because ° is not a part of utf-8 which is the only input OpenAI can take
         if(weather.contains("Sorry I do not have data for that location. Maybe it is misspelled?"))
             return"Sorry, I can't recommend clothes for a null weather.";
         addMessage("user",  "What should I wear if the weather is as follows :'"+weather+"'.");   //gets chatgpt to make recommedations on what clothes to wear.
         NormalSend();
         String recommendation = Receive();
         messages.clear();
+
+        //this code word wraps every 15 words into a single line
         StringJoiner stringJoiner = new StringJoiner("\n");
         String [] tokens = recommendation.split(" ");
         String str =tokens[0];
@@ -158,7 +160,7 @@ public class EasyOpenAI {
         responseObject = new JSONObject(responseString);
         try{
              content = responseObject.getJSONArray("choices").getJSONObject(0).getJSONObject("message").getString("content");
-        }catch(JSONException je){
+        }catch(JSONException je){       //this would indicate that the user is sending too many requests in a short amount of time we prompt the user to wait.
             System.out.println("Please slow down. I can only handle a certain number of requests in a minute. Please wait for 20 seconds. ");
             return "null";
         }

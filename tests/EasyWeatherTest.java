@@ -199,7 +199,7 @@ class EasyWeatherTest {
     }
 
     @Test
-    public void testTripForecast(){
+    public void testTripForecast(){     //tests that we get null forecast when we input a wrong location
         ArrayList<WeatherForecast> tripForecasts = new ArrayList<WeatherForecast>();
         ArrayList<String> locations = new ArrayList<String>(Arrays.asList("dublin","nonsense","nonsense","dublin","Los Angeles"));
         LocalDate startDate = LocalDate.now().plusDays(1);
@@ -212,7 +212,7 @@ class EasyWeatherTest {
     }
 
 @Test
-    public void testGetPrettyForecast(){
+    public void testGetPrettyForecast(){        //tests that we get a pretty forcast in the correct format
         ArrayList<WeatherForecast> forecast = EasyWeather.getTripForecast(new ArrayList<String>(Arrays.asList("nagaland","kuching","los angeles","askjdas","Lagos")),LocalDate.now());//sample locations
 
 
