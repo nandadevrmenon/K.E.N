@@ -19,14 +19,13 @@ import java.util.ResourceBundle;
 
 public class MainUI extends Application implements Initializable {
 
+    public static ObservableList<String> data = FXCollections.observableArrayList("""
+            I'm WeatherBot. I can help you with all your weather needs.
+            I can understand you better if you type in full sentences.
+            Also you can type 'exit' to get out of the program.""");
     public AnchorPane welcomeWindow;
     public TextField messageBar;
-    public ObservableList<String> data = FXCollections.observableArrayList();
     public ListView<String> listView = new ListView<>();
-
-    public static void main(String[] args) {
-        launch();
-    }
 
     @Override
     public void start(Stage stage) {
@@ -70,4 +69,5 @@ public class MainUI extends Application implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         listView.setItems(data);
     }
+
 }

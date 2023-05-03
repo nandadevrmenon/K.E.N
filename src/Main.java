@@ -1,24 +1,88 @@
 
 import com.github.prominence.openweathermap.api.model.forecast.WeatherForecast;
 import com.github.prominence.openweathermap.api.model.weather.Weather;
+import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 import org.apache.hc.core5.http.ParseException;
 import java.io.IOException;
+import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Scanner;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-public class Main {
+public class Main extends Application implements Initializable  {
+
+    public static ObservableList<String> data = FXCollections.observableArrayList("""
+            I'm WeatherBot. I can help you with all your weather needs.
+            I can understand you better if you type in full sentences.
+            Also you can type 'exit' to get out of the program.""");
+    public AnchorPane welcomeWindow;
+    public TextField messageBar;
+    public ListView<String> listView = new ListView<>();
+
+    @Override
+    public void start(Stage stage) {
+        Parent root;
+
+        try { // load the UI from the FXML file
+            root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("UI.fxml")));
+        } catch (IOException e) { // if the FXML file is not found or null, throw an exception
+            throw new RuntimeException(e);
+
+        }
+
+        // load icon
+        stage.getIcons().add(new Image("image.png"));
+        // load style
+        root.getStylesheets().add("style.css");
+        // set the title of the window
+        stage.setTitle("Weather App");
+        // set the scene of the window
+        stage.setScene(new javafx.scene.Scene(root));
+        // show the window
+        stage.show();
+    }
+
+    @FXML
+    private void onClick(ActionEvent event) {
+        event.consume();
+        // hide welcomeWindow when button click
+        if (welcomeWindow.isVisible() && !messageBar.getText().isEmpty()) {
+            welcomeWindow.setVisible(false);
+        }
+
+        // get the message from the messageBar
+        if (!messageBar.getText().isEmpty()) {
+            data.add("\uD83D\uDC66 : " + messageBar.getText());
+            messageBar.clear();
+        }
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        listView.setItems(data);
+    }
+
     public static void main(String[] args) throws IOException, ParseException {
-        System.out.println("Hi, I'm WeatherBot. I can help you with all your weather needs.\n" +
-                "I can understand you better if you type in full sentences.");
-        System.out.println("Also you can type 'exit' to get out of the program.");
+
+        launch(args);
+
         String mode = null;
         Scanner scanner = new Scanner(System.in);
         do {
@@ -33,12 +97,13 @@ public class Main {
         } while (mode != null);
 
 
-
     }
 
     public static String askUserAboutMode(Scanner scanner) {
         String mode = null;
-        System.out.println("I have live weather mode and trip planning mode. Which mode would you like to select?");
+        data.add("I have live weather mode and trip planning mode. Which mode would you like to select?");
+
+
         while (scanner.hasNext()) {
             mode = scanner.nextLine().toLowerCase().trim();     //gets the trimmed and lowercase input
             if(mode.isEmpty()) continue;
