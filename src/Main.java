@@ -1,40 +1,65 @@
-
 import com.github.prominence.openweathermap.api.model.forecast.WeatherForecast;
 import com.github.prominence.openweathermap.api.model.weather.Weather;
 import javafx.application.Application;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import org.apache.hc.core5.http.ParseException;
+
 import java.io.IOException;
-import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.ArrayList;
+import java.util.Objects;
+import java.util.Scanner;
 
 
-public class Main extends Application implements Initializable  {
+public class Main extends Application {
 
-    public static ObservableList<String> data = FXCollections.observableArrayList("""
-            I'm WeatherBot. I can help you with all your weather needs.
-            I can understand you better if you type in full sentences.
-            Also you can type 'exit' to get out of the program.""");
-    public AnchorPane welcomeWindow;
-    public TextField messageBar;
-    public ListView<String> listView = new ListView<>();
+    public AnchorPane welcomeWindow = new AnchorPane();
+    public TextField messageBar = new TextField();
+    public TextArea textArea = new TextArea();
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+
+    public static String askUserAboutMode(Scanner scanner) {
+        String mode = null;
+        System.out.println("""
+                I'm WeatherBot. I can help you with all your weather needs.
+                I can understand you better if you type in full sentences.
+                Also you can type 'exit' to get out of the program.""");
+
+
+        System.out.println("I have live weather mode and trip planning mode. Which mode would you like to select?");
+
+        while (scanner.hasNext()) {
+            mode = scanner.nextLine().toLowerCase().trim();     //gets the trimmed and lowercase input
+            if (mode.isEmpty()) continue;
+            if (mode.contains("current") || mode.contains("live")) {     //if the input conatins the words live or current , we assume they
+                // want the current weather at a location
+                mode = "current";
+                break;
+            } else if (mode.contains("plan") || mode.contains("trip")) {       //else if the input contains the words plan or trip, we assume they want to plan a trip
+                mode = "trip";
+                break;
+            } else if (mode.contains("exit")) {         //if the user wants to exit we break out
+                mode = null;
+                break;
+            } else {          //if input contains none of those keywords, we  ask for clearer input
+                System.out.println("Sorry I couldn't understand could you be a bit clearer?");
+            }
+        }
+        return mode;
+    }
 
     @Override
     public void start(Stage stage) {
@@ -59,71 +84,6 @@ public class Main extends Application implements Initializable  {
         stage.show();
     }
 
-    @FXML
-    private void onClick(ActionEvent event) {
-        event.consume();
-        // hide welcomeWindow when button click
-        if (welcomeWindow.isVisible() && !messageBar.getText().isEmpty()) {
-            welcomeWindow.setVisible(false);
-        }
-
-        // get the message from the messageBar
-        if (!messageBar.getText().isEmpty()) {
-            data.add("\uD83D\uDC66 : " + messageBar.getText());
-            messageBar.clear();
-        }
-    }
-
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        listView.setItems(data);
-    }
-
-    public static void main(String[] args) throws IOException, ParseException {
-
-        launch(args);
-
-        String mode = null;
-        Scanner scanner = new Scanner(System.in);
-        do {
-            mode = askUserAboutMode(scanner);
-            if (mode == null) break;
-            if (mode.equals("current")) {
-                askForCity(scanner);
-            }
-            if (mode.equals("trip")) {
-                getWeatherForTrip(scanner);
-            }
-        } while (mode != null);
-
-
-    }
-
-    public static String askUserAboutMode(Scanner scanner) {
-        String mode = null;
-        data.add("I have live weather mode and trip planning mode. Which mode would you like to select?");
-
-
-        while (scanner.hasNext()) {
-            mode = scanner.nextLine().toLowerCase().trim();     //gets the trimmed and lowercase input
-            if(mode.isEmpty()) continue;
-            if (mode.contains("current") || mode.contains("live")) {     //if the input conatins the words live or current , we assume they
-                // want the current weather at a location
-                mode = "current";
-                break;
-            } else if (mode.contains("plan") || mode.contains("trip")) {       //else if the input contains the words plan or trip, we assume they want to plan a trip
-                mode = "trip";
-                break;
-            } else if (mode.contains("exit")) {         //if the user wants to exit we break out
-                mode = null;
-                break;
-            } else {          //if input contains none of those keywords, we  ask for clearer input
-                System.out.println("Sorry I couldn't understand could you be a bit clearer?");
-            }
-        }
-        return mode;
-    }
-
     public static void askForCity(Scanner scanner) {        //Live Weather Mode
         System.out.println("what place would you like to know the current weather for?");
         EasyOpenAI openAI = new EasyOpenAI();
@@ -137,13 +97,64 @@ public class Main extends Application implements Initializable  {
             String weatherString = getWeather(input);          //we get the weather for that location using the weather API
             if(weatherString.equals("exit")){
                 break;
-            }
-            else if (!weatherString.isEmpty()) {                       //if the weather String actually has a value we print it out
+            } else if (!weatherString.isEmpty()) {                       //if the weather String actually has a value we print it out
                 System.out.println("The weather there is " + "\r\n" + weatherString);
                 System.out.println("Would you like to know the weather at another place? If not, type 'exit'.");
             }
 
         }
+    }
+
+    //I made this public so that i can use it in the test class
+    public static LocalDate getStartDateFromUser(Scanner scanner, ArrayList<String> locations) {
+        System.out.println("When are you starting the trip?( Accepted formats: today,tomorrow,day after tomorrow,dd/MM/YYYY)");
+        System.out.println("(Note: The API we use only allows a 5 day forecast so your trip has to start between today and the day after tomorrow.)");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");        //create a datetimeformatter
+
+        while(scanner.hasNext()) {      //while user inputs date
+            String input = scanner.nextLine().toLowerCase().trim();     //we clean input
+            if(input.isEmpty()) continue;                                       //if input is empty we just continue and wait till user actually inputs something
+            if (input.contains("now") || input.contains("today")) {             //if input contains now or today then we consider that the requested date is today
+                if(LocalTime.now().isAfter(LocalTime.of(18,0,0,0))){        //if the time for current day is part 6pm then we the API settings we use don't allow us to access the forcast for the end of the 5th day. So we can only start the trip the next day.
+                    System.out.println("The day is almost over. You can use the live weather to check today's weather \n and then we can plan the trip for you starting tomorrow.");
+                    return LocalDate.now().plusDays(1);
+                }
+                if(LocalTime.now().isAfter(LocalTime.of(9, 00, 00, 0))){            //if the time is after 9 then we assum that only one location can be visited one the first day.
+                    System.out.println("Since your starting the trip now, I am assuming the schedule looks like this: ");
+                    System.out.println("Day one : " + locations.get(0));
+                    System.out.println("Day two : " + locations.get(1) + " and " + locations.get(2));
+                    System.out.println("Day three : "+locations.get(3) + " and " + locations.get(4));
+                }
+                return LocalDate.now();
+            } else if (input.contains("tomorrow")) {      //if input contains tomorrow
+                if (input.contains("day after")) {          //and it contains 'day after' we return the object for the day after tomorrow
+                    return LocalDate.now().plusDays(2);
+                }
+                return LocalDate.now().plusDays(1);
+            } else if (input.contains("day after")){
+                return LocalDate.now().plusDays(2);
+            } else if (validDate(input,formatter)) {          //if date is in forat dd/mm/yyyy but the date is outside bounds we say that to the user
+                LocalDate startDate = LocalDate.parse(input, formatter);
+                if(startDate.isAfter(LocalDate.now().plusDays(2)) || (startDate.isBefore(LocalDate.now()))){
+                    System.out.println("That date is outside the bounds for which I can provide you a forecast. Please try again when the date comes closer.");
+                    continue;
+                }
+                return startDate;
+            } else {      //else it means tha the dat is not ina ny of the formats we accept
+                System.out.println("The date you have entered is not in a format I can understand. Please try to be clearer.");
+            }
+        }
+        return null;
+    }
+
+    public static ArrayList<String> getPrettyForecasts(ArrayList<WeatherForecast> fcs,ArrayList<String> locations){  //returns string array of pretty formatted forecasts
+        ArrayList<String> prettyFCs = new ArrayList<String>();
+        for (int i = 0 ; i <fcs.size(); i++){        //for each ForeCast object, get the pretty forecast and add it into array
+            String prettyFC = EasyWeather.getPrettyForecast(fcs.get(i),locations.get(i));
+            prettyFCs.add(prettyFC);
+            System.out.println(prettyFC);
+        }
+        return prettyFCs;
     }
 
     public static String getWeather(String city) {
@@ -217,50 +228,22 @@ public class Main extends Application implements Initializable  {
         return locations;
     }
 
-    //I made this public so that i can use it in the test class
-    public static LocalDate getStartDateFromUser(Scanner scanner, ArrayList<String> locations) {
-        System.out.println("When are you starting the trip?( Accepted formats: today,tomorrow,day after tomorrow,dd/MM/YYYY)");
-        System.out.println("(Note: The API we use only allows a 5 day forecast so your trip has to start between today and the day after tomorrow.)");
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");        //create a datetimeformatter
+    public static void printClothRecommendations(ArrayList<String> messages,ArrayList<String> locations){
+        EasyOpenAI openAI = new EasyOpenAI();                 //for each for pretyForecast, we use OpenAI to print out clcothing recommendations
+        for(int i = 0 ; i <messages.size(); i++){
+            System.out.println();
+            System.out.println("Getting cloth recommendations for : "+locations.get(i)+". Please Wait...");
+            System.out.println();
+            try {
+                Thread.sleep(18000);        //we sleep for 18000 ms since OpenAI API has a cooldown of 20 seconds after each request.
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
 
-        while(scanner.hasNext()) {      //while user inputs date
-            String input = scanner.nextLine().toLowerCase().trim();     //we clean input
-            if(input.isEmpty()) continue;                                       //if input is empty we just continue and wait till user actually inputs something
-            if (input.contains("now") || input.contains("today")) {             //if input contains now or today then we consider that the requested date is today
-                if(LocalTime.now().isAfter(LocalTime.of(18,0,0,0))){        //if the time for current day is part 6pm then we the API settings we use don't allow us to access the forcast for the end of the 5th day. So we can only start the trip the next day.
-                    System.out.println("The day is almost over. You can use the live weather to check today's weather \n and then we can plan the trip for you starting tomorrow.");
-                    return LocalDate.now().plusDays(1);
-                }
-                if(LocalTime.now().isAfter(LocalTime.of(9, 00, 00, 0))){            //if the time is after 9 then we assum that only one location can be visited one the first day.
-                    System.out.println("Since your starting the trip now, I am assuming the schedule looks like this: ");
-                    System.out.println("Day one : " + locations.get(0));
-                    System.out.println("Day two : " + locations.get(1) + " and " + locations.get(2));
-                    System.out.println("Day three : "+locations.get(3) + " and " + locations.get(4));
-                }
-                return LocalDate.now();
-            }
-            else if (input.contains("tomorrow")) {      //if input contains tomorrow
-                if (input.contains("day after")) {          //and it contains 'day after' we return the object for the day after tomorrow
-                    return LocalDate.now().plusDays(2);
-                }
-                return LocalDate.now().plusDays(1);
-            }
-            else if (input.contains("day after")){
-                return LocalDate.now().plusDays(2);
-            }
-            else if (validDate(input,formatter)) {          //if date is in forat dd/mm/yyyy but the date is outside bounds we say that to the user
-                LocalDate startDate = LocalDate.parse(input, formatter);
-                if(startDate.isAfter(LocalDate.now().plusDays(2)) || (startDate.isBefore(LocalDate.now()))){
-                    System.out.println("That date is outside the bounds for which I can provide you a forecast. Please try again when the date comes closer.");
-                    continue;
-                }
-                return startDate;
-            }
-            else {      //else it means tha the dat is not ina ny of the formats we accept
-                System.out.println("The date you have entered is not in a format I can understand. Please try to be clearer.");
-            }
+            System.out.println(openAI.getClothRecommendations(messages.get(i)));
+
         }
-       return null;
+        System.out.println();
     }
 
 
@@ -287,32 +270,34 @@ public class Main extends Application implements Initializable  {
         return result+str.substring(1);
     }
 
-    public static ArrayList<String> getPrettyForecasts(ArrayList<WeatherForecast> fcs,ArrayList<String> locations){  //returns string array of pretty formatted forecasts
-        ArrayList<String> prettyFCs = new ArrayList<String>();
-        for (int i = 0 ; i <fcs.size();i++){        //for each ForeCast object, get the pretty forecast and add it into array
-            String prettyFC = EasyWeather.getPrettyForecast(fcs.get(i),locations.get(i));
-            prettyFCs.add(prettyFC);
-            System.out.println(prettyFC);
-        }
-        return prettyFCs;
+    public void run() {
+        String mode = null;
+        Scanner scanner = new Scanner(System.in);
+        do {
+            mode = askUserAboutMode(scanner);
+            if (mode == null) break;
+            if (mode.equals("current")) {
+                askForCity(scanner);
+            }
+            if (mode.equals("trip")) {
+                getWeatherForTrip(scanner);
+            }
+        } while (mode != null);
     }
 
-    public static void printClothRecommendations(ArrayList<String> messages,ArrayList<String> locations){
-        EasyOpenAI openAI = new EasyOpenAI();                 //for each for pretyForecast, we use OpenAI to print out clcothing recommendations
-        for(int i = 0 ; i <messages.size();i++){
-            System.out.println();
-            System.out.println("Getting cloth recommendations for : "+locations.get(i)+". Please Wait...");
-            System.out.println();
-            try {
-                Thread.sleep(18000);        //we sleep for 18000 ms since OpenAI API has a cooldown of 20 seconds after each request.
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-
-            System.out.println(openAI.getClothRecommendations(messages.get(i)));
-
+    @FXML
+    private void onClick(ActionEvent event) {
+        event.consume();
+        // hide welcomeWindow when button click
+        if (welcomeWindow.isVisible() && !messageBar.getText().isEmpty()) {
+            welcomeWindow.setVisible(false);
         }
-        System.out.println();
+
+        // get the message from the messageBar
+        if (!messageBar.getText().isEmpty()) {
+            textArea.appendText("\uD83D\uDC66 : " + messageBar.getText() + "\n");
+            messageBar.clear();
+        }
     }
 
 

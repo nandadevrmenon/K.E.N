@@ -7,42 +7,42 @@ rgba(52, 53, 65);
     -fx-background-color: rgba(52, 53, 65);
 }
 
-.list-view .list-cell:odd {
-    -fx-background-color: rgba(50, 50, 60);
-}
-
-.list-view .list-cell:even {
-    -fx-background-color: rgba(52, 53, 65);
-}
-
 .list-cell {
     -fx-font-size: 20.0;
     -fx-font-family: "JetBrains Mono";
 }
 
-.list-view {
+.text-area {
     text-area-background: rgba(50, 50, 60);
 }
 
 .text-area .content {
     -fx-background-color: text-area-background;
     -fx-highlight-text-fill: white;
+    -fx-font-size: 20.0;
+    -fx-font-family: "JetBrains Mono";
 
 }
 
 .text-field {
     -fx-background-color: rgba(50, 50, 60);
     -fx-font-family: "JetBrains Mono";
+    -fx-font-size: 20.0;
 
 }
 
 /* Set the font color of the Text nodes to white */
 .text {
     -fx-fill: white;
+    -fx-font-family: "JetBrains Mono";
+    -fx-font-size: 20.0;
+
 }
 
 .text-input {
     -fx-text-fill: white;
+    -fx-font-family: "JetBrains Mono";
+    -fx-font-size: 20.0;
 }
 
 .button {
