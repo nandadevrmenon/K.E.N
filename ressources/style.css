@@ -1,3 +1,7 @@
+.root {
+    -fx-font-family: "JetBrains Mono";
+}
+
 /* Set the background color of the AnchorPane to black */
 --fx-background-color {
 rgba(52, 53, 65);
@@ -7,20 +11,12 @@ rgba(52, 53, 65);
     -fx-background-color: rgba(52, 53, 65);
 }
 
-.list-view .list-cell:odd {
-    -fx-background-color: rgba(50, 50, 60);
-}
-
-.list-view .list-cell:even {
-    -fx-background-color: rgba(52, 53, 65);
-}
-
-.list-cell {
+.text-area {
     -fx-font-size: 20.0;
     -fx-font-family: "JetBrains Mono";
 }
 
-.list-view {
+.text-area {
     text-area-background: rgba(50, 50, 60);
 }
 

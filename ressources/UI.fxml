@@ -1,26 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" styleClass="anchor-pane" xmlns="http://javafx.com/javafx/19"
-            fx:controller="MainUI">
+            fx:controller="Main">
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="720.0" prefWidth="1113.0" styleClass="anchor-pane">
+        <TextField fx:id="messageBar" layoutX="100.4" layoutY="635.0" prefHeight="55.0" prefWidth="870.0"
+                   promptText="Send a message ..." AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="90.0"
+                   AnchorPane.rightAnchor="153.0" AnchorPane.topAnchor="635.0">
+        </TextField>
+        <Button layoutX="981.0" layoutY="635.0" mnemonicParsing="false" onAction="#onClick" prefHeight="55.0"
+                prefWidth="78.0" text="Send" AnchorPane.bottomAnchor="30.0" AnchorPane.topAnchor="635.0">
+        </Button>
+        <TextArea fx:id="textArea" layoutX="92.0" layoutY="67.0" prefHeight="503.0" prefWidth="930.0" wrapText="true"/>
+    </AnchorPane>
     <AnchorPane fx:id="welcomeWindow" minHeight="0.0" minWidth="0.0" prefHeight="570.0" prefWidth="1112.0">
-        <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-                  mouseTransparent="true" prefHeight="570.0" prefWidth="1112.0" styleClass="anchor-pane"
-                  AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                  AnchorPane.topAnchor="0.0">
+        <GridPane layoutY="-9.0" mouseTransparent="true" prefHeight="590.0" prefWidth="1123.0" styleClass="anchor-pane"
+                  AnchorPane.bottomAnchor="-11.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                  AnchorPane.topAnchor="-9.0">
             <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
             </columnConstraints>
             <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints maxHeight="233.0" minHeight="10.0" prefHeight="134.0" vgrow="SOMETIMES"/>
+                <RowConstraints maxHeight="1.7976931348623157E308" minHeight="0.0" prefHeight="79.0" vgrow="SOMETIMES"/>
+                <RowConstraints maxHeight="368.0" minHeight="0.0" prefHeight="112.0" vgrow="SOMETIMES"/>
+                <RowConstraints maxHeight="368.0" minHeight="10.0" prefHeight="51.0" vgrow="SOMETIMES"/>
+                <RowConstraints maxHeight="372.0" minHeight="10.0" prefHeight="213.0" vgrow="SOMETIMES"/>
             </rowConstraints>
              <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="K.E.N" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                  <font>
@@ -45,16 +56,52 @@
                     <Font name="JetBrains Mono Bold" size="21.0"/>
                 </font>
             </Text>
+            <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0"
+                  text="&quot;I want to know the Live weather in Dublin&quot;" textAlignment="CENTER"
+                  wrappingWidth="324.54425048828125" GridPane.halignment="CENTER" GridPane.rowIndex="2"
+                  GridPane.valignment="TOP">
+                <font>
+                    <Font name="System Italic" size="16.0"/>
+                </font>
+            </Text>
+            <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="&quot;I want to plan a Trip&quot; "
+                  textAlignment="CENTER" wrappingWidth="268.54425048828125" GridPane.halignment="CENTER"
+                  GridPane.rowIndex="3" GridPane.valignment="TOP">
+                <font>
+                    <Font name="System Italic" size="16.0"/>
+                </font>
+            </Text>
+            <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0"
+                  text="Planning multiples day trip and giving you clothes recommendation based on the weather !"
+                  textAlignment="CENTER" wrappingWidth="308.7708282470703" GridPane.columnIndex="1"
+                  GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                <font>
+                    <Font size="16.0"/>
+                </font>
+            </Text>
+            <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0"
+                  text="Giving you plenty of live weather data everywhere in the world !" textAlignment="CENTER"
+                  wrappingWidth="319.7708282470703" GridPane.columnIndex="1" GridPane.halignment="CENTER"
+                  GridPane.rowIndex="3" GridPane.valignment="TOP">
+                <font>
+                    <Font size="16.0"/>
+                </font>
+            </Text>
+            <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Be descriptive !" textAlignment="CENTER"
+                  wrappingWidth="277.9830722808838" GridPane.columnIndex="2" GridPane.halignment="CENTER"
+                  GridPane.rowIndex="2" GridPane.valignment="TOP">
+                <font>
+                    <Font size="16.0"/>
+                </font>
+            </Text>
+            <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0"
+                  text="Trip planning mode may be a bit slow due to the API we use." textAlignment="CENTER"
+                  wrappingWidth="274.9830722808838" GridPane.columnIndex="2" GridPane.halignment="CENTER"
+                  GridPane.rowIndex="3" GridPane.valignment="TOP">
+                <font>
+                    <Font size="16.0"/>
+                </font>
+            </Text>
         </GridPane>
-    </AnchorPane>
-    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="720.0" prefWidth="1113.0" styleClass="anchor-pane">
-        <TextField fx:id="messageBar" layoutX="100.4" layoutY="635.0" prefHeight="55.0" prefWidth="870.0"
-                   promptText="Send a message ..." AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="90.0"
-                   AnchorPane.rightAnchor="153.0" AnchorPane.topAnchor="635.0">
-        </TextField>
-        <Button layoutX="981.0" layoutY="635.0" mnemonicParsing="false" onAction="#onClick" prefHeight="55.0"
-                prefWidth="78.0" text="Send" AnchorPane.bottomAnchor="30.0" AnchorPane.topAnchor="635.0">
-        </Button>
-        <ListView fx:id="listView" layoutX="92.0" layoutY="67.0" prefHeight="503.0" prefWidth="930.0"/>
     </AnchorPane>
 </AnchorPane>
