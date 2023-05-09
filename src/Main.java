@@ -1,34 +1,21 @@
 import com.github.prominence.openweathermap.api.model.forecast.WeatherForecast;
 import com.github.prominence.openweathermap.api.model.weather.Weather;
-import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.Scanner;
 
 
-public class Main extends Application {
-
-    public AnchorPane welcomeWindow = new AnchorPane();
-    public TextField messageBar = new TextField();
-    public TextArea textArea = new TextArea();
+public class Main {
 
     public static void main(String[] args) {
-        launch(args);
+
+        //MainUI.launch(MainUI.class, args); The UI doens't work, so we're not using it
+        // It would've been too much work to integrate it with our actual system.
+        run();
     }
 
     public static String askUserAboutMode(Scanner scanner) {
@@ -61,28 +48,6 @@ public class Main extends Application {
         return mode;
     }
 
-    @Override
-    public void start(Stage stage) {
-        Parent root;
-
-        try { // load the UI from the FXML file
-            root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("UI.fxml")));
-        } catch (IOException e) { // if the FXML file is not found or null, throw an exception
-            throw new RuntimeException(e);
-
-        }
-
-        // load icon
-        stage.getIcons().add(new Image("image.png"));
-        // load style
-        root.getStylesheets().add("style.css");
-        // set the title of the window
-        stage.setTitle("Weather App");
-        // set the scene of the window
-        stage.setScene(new javafx.scene.Scene(root));
-        // show the window
-        stage.show();
-    }
 
     public static void askForCity(Scanner scanner) {        //Live Weather Mode
         System.out.println("what place would you like to know the current weather for?");
@@ -270,7 +235,7 @@ public class Main extends Application {
         return result+str.substring(1);
     }
 
-    public void run() {
+    public static void run() {
         String mode = null;
         Scanner scanner = new Scanner(System.in);
         do {
@@ -284,23 +249,6 @@ public class Main extends Application {
             }
         } while (mode != null);
     }
-
-    @FXML
-    private void onClick(ActionEvent event) {
-        event.consume();
-        // hide welcomeWindow when button click
-        if (welcomeWindow.isVisible() && !messageBar.getText().isEmpty()) {
-            welcomeWindow.setVisible(false);
-        }
-
-        // get the message from the messageBar
-        if (!messageBar.getText().isEmpty()) {
-            textArea.appendText("\uD83D\uDC66 : " + messageBar.getText() + "\n");
-            messageBar.clear();
-        }
-    }
-
-
 }
 
 

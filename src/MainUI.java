@@ -1,4 +1,3 @@
-/*
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -73,6 +72,3 @@ public class MainUI extends Application implements Initializable {
     }
 
 }
-
-
- */
